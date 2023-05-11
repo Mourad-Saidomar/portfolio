@@ -8,6 +8,29 @@
 
 }
 
+/* Masquer la barre de défilement native */
+::-webkit-scrollbar {
+    display:contents;
+}
+
+/* Définir la largeur de la barre de défilement personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Définir la couleur de la barre de défilement */
+::-webkit-scrollbar-thumb {
+    background-color: #161c36;
+    border-radius: 10px;
+}
+
+/* Définir la couleur de fond de la piste de la barre de défilement */
+::-webkit-scrollbar-track {
+    background-color: #292f4c;
+    border-radius: 10px;
+}
+
+
 html {
     scroll-behavior: smooth;
 }
@@ -15,6 +38,8 @@ html {
 body {
     background: #0c1022;
     color: #fff ;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .wrapper {
@@ -187,6 +212,7 @@ body {
 .home-content h3 {
     font-size: 32px;
     font-weight: 700;
+    line-height: 1.2;
     opacity: 0;
     animation: slideLeft 1s ease forwards;
     animation-delay: 1s;
@@ -199,6 +225,8 @@ body {
     animation: slideLeft 1s ease forwards;
     animation-delay: 1.3s;
 }
+
+
 
 .btn {
     position: relative;
@@ -429,12 +457,85 @@ body {
     animation-delay: 1.3s;
 }
 
-.skill {
+.about-2 {
     width: 100%;
     height: 100vh;
+    margin-top: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
 }
 
 
+.flip-card {
+    background-color: transparent;
+    width: 1300px;
+    height: 504px;
+    perspective: 1000px;
+    font-family: sans-serif;
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+    animation-delay: .7s;
+  }
+  
+  .flip-card-2 {
+    background-color: transparent;
+    width: 1300px;
+    height: 504px;
+    perspective: 1000px;
+    font-family: sans-serif;
+    opacity: 0;
+    animation: slideLeft 1s ease forwards;
+    animation-delay: .7s;
+  }
+  
+
+  .title {
+    overflow-wrap: break-word;
+    font-size: 1.5em;
+    font-weight: 900;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .flip-card-front, .flip-card-back {
+    box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid coral;
+    border-radius: 1rem;
+  }
+  
+  .flip-card-front {
+    background: linear-gradient(45deg, #141e4a, #ff0000 90%);
+    color: coral;
+  }
+  
+  .flip-card-back {
+    background: linear-gradient(120deg, #d2b48c);
+    color: white;
+    transform: rotateY(180deg);
+  }
 
 @keyframes slideTop {
     0% {
