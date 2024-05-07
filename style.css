@@ -4,8 +4,36 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    outline: none; border:none;
     font-family: 'Popins', sans-serif;
+    transition: .2s linear;
 
+}
+
+
+@media screen and (max-width: 400px) {
+    .body {
+        width: 100%;
+    }
+    .shape {
+        width: 90%;
+
+        
+    }
+
+
+
+}
+/* Style par défaut pour les écrans larges */
+body {
+    font-size: 16px;
+}
+
+/* Réduire la taille de la police pour les écrans plus petits */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
 }
 
 /* Masquer la barre de défilement native */
@@ -69,12 +97,12 @@ body {
 }
 
 .shape:nth-of-type(3){
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 300px;
     background: #379eff;
     position: absolute;
-    bottom: -25%;
-    right: -5%;
+    bottom: 0%;
+    right: 5%;
     opacity: .3;
     z-index: -1;
     animation: wave 10s ease-in-out infinite;
@@ -85,8 +113,9 @@ body {
     height: 250px;
     background: #fbff0d;
     position: absolute;
-    bottom: -120px;
-    left: 50%;
+    bottom: -90px;
+    transform: translateY(-60%);
+    left: 36%;
     opacity: .4;
     z-index: -1;
     animation: wave 8s ease-in-out infinite;
@@ -219,8 +248,9 @@ body {
 }
 
 .home-content p {
-    font-size:  16px;
-    margin: 20px 0 40px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
     opacity: 0;
     animation: slideLeft 1s ease forwards;
     animation-delay: 1.3s;
@@ -416,6 +446,8 @@ body {
     object-fit: cover;
 }
 
+/*A propos*/
+
 .about {
     width: 100%;
     height: 100vh;
@@ -428,16 +460,26 @@ body {
 
 
 .about .about-img {
-    width: 410px;
-    height: 410px;
-    opacity: 0;
-    animation: zoomIn 1s ease forwards, floatImage 4s ease-in-out infinite;
-    animation-delay: 2.1s, 3.1s;
+    background: #162566;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-position: center center;
+    height: 550px;
+    width: 559px;
+    animation: wave 6s ease-in-out infinite;
+    transition: all 1s ease-in-out;
 }
+
+
+.about .about-img img {
+    height: 550px;
+    width: 559px;
+}
+
   
 .about .about-content {
     max-width: 500px;
-    margin-left: 300px;
+    margin-left: 150px;
 }
 
 .about-content h1 {
@@ -467,75 +509,171 @@ body {
     gap: 2rem;
 }
 
+/*Competences*/
 
-.flip-card {
-    background-color: transparent;
-    width: 1300px;
-    height: 504px;
-    perspective: 1000px;
-    font-family: sans-serif;
-    opacity: 0;
-    animation: slideRight 1s ease forwards;
-    animation-delay: .7s;
-  }
-  
-  .flip-card-2 {
-    background-color: transparent;
-    width: 1300px;
-    height: 504px;
-    perspective: 1000px;
-    font-family: sans-serif;
-    opacity: 0;
-    animation: slideLeft 1s ease forwards;
-    animation-delay: .7s;
-  }
-  
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
-  .title {
-    overflow-wrap: break-word;
-    font-size: 1.5em;
-    font-weight: 900;
+*
+
+.container{
+    padding:15px 9%;
+    padding-bottom: 100px;
+}
+
+.container .heading{
     text-align: center;
-    margin: 0;
-  }
-  
-  .flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    padding-bottom: 15px;
+    color:#fff;
+    text-shadow: 0 5px 10px rgba(0,0,0,.2);
+    font-size: 50px;
+}
+
+.container .box-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap:15px;
+}
+
+.container .box-container .box{
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    border-radius: 5px;
+    background: #560b88;
     text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-  }
-  
-  .flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-  }
-  
-  .flip-card-front, .flip-card-back {
-    box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
-    position: absolute;
+    padding:30px 20px;
+}
+
+.container .box-container .box img{
+    height: 80px;
+}
+
+.container .box-container .box h3{
+    color:#fff;
+    font-size: 22px;
+    padding:10px 0;
+}
+
+.container .box-container .box p{
+    color:#fff;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.container .box-container .box .btn{
+    margin-top: 10px;
+    display: inline-block;
+    background:#333;
+    color:#fff;
+    font-size: 17px;
+    border-radius: 5px;
+    padding: 8px 25px;
+}
+
+.container .box-container .box .btn:hover{
+    letter-spacing: 1px;
+}
+
+.container .box-container .box:hover{
+    box-shadow: 0 10px 15px rgba(0,0,0,.3);
+    transform: scale(1.03);
+}
+
+@media (max-width:768px){
+    .container{
+        padding:20px;
+    }
+}
+
+/*-------------------------Parcours-------------------------*/
+
+.timeline {
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items : center;
+    min-height: 100vh;
+    padding: 0 19%;
+    gap: 100px;
+}
+
+.timeline .timeline-row {
+    display: flex;
+    column-gap: 64px;
+}
+
+
+.timeline-column .title {
+    position: relative;
+    display: inline-block;
+    font-size: 28px;
+    margin: 32px 0 16px 30px;
+}
+
+.timeline-column .timeline-box {
+    border-left: 2px solid #0ef;
+}
+
+.timeline-box .timeline-content {
+    position: relative;
+    padding-left: 27px;
+}
+
+.timeline-box .timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10.5px;
+    width: 20px;
+    height: 20px;
+    background: #0ef;
+    border-radius: 50%;
+}
+
+.timeline-content .content {
+    padding: 24px;
+    border: 2px solid #0ef;
+    border-radius: 8px;
+    margin-bottom: 32px;
+}
+
+.timeline-content .content .year {
+    font-size: 16px;
+    color: #0ef;
+}
+
+.timeline-content .content .year i {
+    margin-right: 8px;
+}
+
+.timeline-content .content h3 {
+    font-size: 19px;
+    margin: 8px 0;
+}
+
+.timeline-content .content p {
+    font-size: 16px;
+}
+
+.animate {
+    position: absolute;
+    top: 0;
+    right: 0;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border: 1px solid coral;
-    border-radius: 1rem;
-  }
-  
-  .flip-card-front {
-    background: linear-gradient(45deg, #141e4a, #ff0000 90%);
-    color: coral;
-  }
-  
-  .flip-card-back {
-    background: linear-gradient(120deg, #d2b48c);
-    color: white;
-    transform: rotateY(180deg);
-  }
+    /*animation: show-right 1s ease forwards;*/
+}
+
+@keyframes show-right {
+    100% {
+        width: 0;
+    }
+}
+
+
+
+
+
+
+
+
 
 @keyframes slideTop {
     0% {
