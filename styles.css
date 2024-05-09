@@ -256,9 +256,9 @@ body {
     height: 48px;
     border-radius: 40px;
     font-size: 19px;
-    color: #fff;
+    color: black;
     text-decoration:  none;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 1px;
     z-index: 1;
     opacity: 0;
@@ -429,6 +429,7 @@ body {
 
 .home .home-img img {
     position: absolute;
+    bottom: 0.1px;
     left: 58%;
     transform: translateX(-50%);
     max-width: 380px;
@@ -723,6 +724,7 @@ body {
     padding-left: 27px;
 }
 
+
 .timeline-box .timeline-content::before {
     content: '';
     position: absolute;
@@ -759,6 +761,10 @@ body {
 .timeline-content .content p {
     text-align: center;
     font-size: 16px;
+}
+
+.timeline-box .timeline-content p a {
+    top: 10px;
 }
 
 
