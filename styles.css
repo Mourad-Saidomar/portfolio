@@ -1,38 +1,155 @@
-@import url("https : //fonts . googleapis . com/css2? family=poppins : see; see; 7ee; see; saa& display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
 *  {
-    margin: 5px;
     padding: 0;
     box-sizing: border-box;
     outline: none; border:none;
     font-family: 'Popins', sans-serif;
     transition: .2s linear;
-
 }
 
 
-@media screen and (max-width: 400px) {
-    .body {
-        width: 100%;
-    }
-    .shape {
-        width: 90%;
-
-        
-    }
-
-
-
-}
-/* Style par défaut pour les écrans larges */
 body {
-    font-size: 16px;
+    width: 100%;
+    background: #0c1022;
+    color: #fff ;
+    overflow-x: hidden;
+    overflow-y: auto;
+    justify-content: flex-end;
+    align-items: flex-end;
+    min-height: 100vh;
 }
 
-/* Réduire la taille de la police pour les écrans plus petits */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
+footer {
+    margin-top: 10%;
+    margin-bottom: 100px;
+    position: absolute;
+    width: 100%;
+    background: #3586ff;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+footer .social_icon, footer .menu {
+    position: relative;
+    dispLay: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+footer .social_icon li,  footer .menu li {
+    list-style: none;
+}
+
+footer .social_icon li a {
+    font-size: 2em;
+    color: #fff;
+    margin: 0 10px;
+    display: inline-block;
+    transition: 0.5s;
+}
+
+footer .social_icon li a:hover {
+    transform: translateY(-10px);
+}
+
+footer .menu li a {
+    font-size: 1.2em;
+    color: #fff;
+    display: inline-block;
+    transition: 0.5s;
+}
+
+footer .menu a {
+    font-size: 1.2em;
+    color: #fff;
+    -webkit-text-stroke: 0.2px black;
+    margin: 0 10px;
+    display: inline-block;
+    transition: 0.5s;
+    text-decoration: none;
+    opacity: 0.75;
+}
+
+footer .menu a:hover {
+    background : linear-gradient(45deg, #F06,y#3cf);
+    -webkit-text-stroke: 0.2px black;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+
+}
+
+footer .menu li a:hover {
+    opacity: 1;
+}
+
+footer p {
+    color: #fff;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+footer .wave {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url(image/wave.png);
+    background-size: 1000px 100px;
+}
+
+footer .wave#wave1 {
+    z-index: 1000;
+    opacity: 1;
+    bottom: 0;
+    animation: animateWave 4s linear infinite;
+}
+
+footer .wave#wave2 {
+    z-index: 999;
+    opacity: 0.5;
+    bottom: 10px;
+    animation: animateWave_02 4s linear infinite;
+}
+
+footer .wave#wave3 {
+    z-index: 1000;
+    opacity: 0.2;
+    bottom: 15px;
+    animation: animateWave 3s linear infinite;
+}
+
+footer .wave#wave4 {
+    z-index: 999;
+    opacity: 0.7;
+    bottom: 20px;
+    animation: animateWave_02 3s linear infinite;
+}
+
+
+@keyframes animateWave {
+    0%{
+        background-position-x: 1000px;
+    }
+    100%{
+        background-position-x: 0px;
+    }
+}
+
+@keyframes animateWave_02 {
+    0%{
+        background-position-x: 0px;
+    }
+    100%{
+        background-position-x: 1000px;
     }
 }
 
@@ -61,13 +178,6 @@ body {
 
 html {
     scroll-behavior: smooth;
-}
-
-body {
-    background: #0c1022;
-    color: #fff ;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
 .wrapper {
@@ -173,9 +283,9 @@ body {
 
 .logo { 
     font-size: 25px;
-    color: #fff;
+    color: orangered;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 900;
     pointer-events: none;
     opacity: 0;
     animation: slideTop 1s ease forwards;
@@ -246,6 +356,10 @@ body {
     animation-delay: 1s;
 }
 
+.home-content .nom {
+    color: orangered;
+}
+
 .btn {
     top: 40px;
     position: relative;
@@ -313,7 +427,7 @@ body {
     width: 40px;
     height:  40px;
     background : linear-gradient(45deg, #F06, #3cf) ;
-    border-radius : 58%;
+    border-radius : 50%;
     font-size : 20px;
     color : #fff;
     text-decoration: none;
@@ -424,6 +538,7 @@ body {
     border-radius: 50%;
     z-index: 1;
     overflow: hidden;
+    pointer-events: none;
 }
 
 
@@ -439,6 +554,7 @@ body {
 /*------------------------------- A propos ----------------------------*/
 
 .about {
+    margin-top: 10%;
     width: 100%;
     height: 100vh;
     align-items: center;
@@ -453,25 +569,17 @@ body {
 
 }
 
-.about .moi .about-img {
-    -webkit-background-size: cover;
-    background-size: cover;
-    background-position: center center;
+.about .moi img {
+    display: flex;
     height: 550px;
-    width: 559px;
-    transition: all 1s ease-in-out;
+    width: 700px;
+    pointer-events: none;
 }
 
-
-.about .moi .about-img img {
-    height: 550px;
-    width: 650px;
-}
 
 .about .moi .about-content {
     align-content: center;
-    max-width: 500px;
-    margin-left: 150px;
+    max-width: 43%;
 }
 
 .about-content h1 {
@@ -488,15 +596,20 @@ body {
     font-size:  20px;    
     font-weight: 600;
     text-align: justify;
-    margin: 20px 0 50px;
+    margin: 20px 0 30px;
     opacity: 0;
     animation: slideLeft 1s ease forwards;
     animation-delay: 1.3s;
 }
 
-.about .moi .about-content a {
-    top: -35px;
-    left: 30%;
+.about-btn {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.exp-box {
+    margin: 2%;
 }
 
 .exp-box h1 {
@@ -597,7 +710,7 @@ body {
     height: 100vh;
     align-items: center;
     gap: 2rem;
-    margin-top: 50%;
+    margin-top: 60%;
 }
 
 .container{
@@ -674,6 +787,10 @@ body {
 /*-------------------------Parcours-------------------------*/
 
 
+.Parcours {
+    margin-top: 70%;
+}
+
 .Parcours .heading {
     text-align: center;
     padding-bottom: 15px;
@@ -729,7 +846,7 @@ body {
     content: '';
     position: absolute;
     top: 0;
-    left: -15.5px;
+    left: -11.5px;
     width: 20px;
     height: 20px;
     background: orangered;
@@ -776,6 +893,9 @@ body {
 
 /*---------------------------- Projets ------------------------------*/
 
+.projet {
+    margin-top: 7%;
+}
 
 .projet .heading {
     text-align: center;
@@ -784,7 +904,6 @@ body {
     font-weight: 700;
     text-shadow: 0 5px 10px rgba(0,0,0,.2);
     font-size: 50px;
-    margin-top: 5%;
 }
 
 .pro-cont {
@@ -818,6 +937,11 @@ body {
     font-size: 16px;
 }
 
+.pro-box .pro-btn {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
 
 
 

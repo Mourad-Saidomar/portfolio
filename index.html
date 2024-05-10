@@ -5,20 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="image/icons.png">
-    <title>portfolio</title>
+    <title>Portfolio BTS SIO | Mourad SAIDOMAR</title>
     <link rel="stylesheet" href="styles.css">
     <link href= 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     
     <header class="header">
-        <a href="#" class="logo">Portfolio.</a>
+        <a href="#" class="logo">Mourad.</a>
         <nav class="navbar">
             <a href="#home" style="--i:1">Accueil</a>
             <a href="#about" style="--i:2">A propos</a>
             <a href="#competences" style="--i:3">Compétences</a>
-            <a href="#Parcours" style="--i:4">Parcours</a> 
-            <a href="#Projet" style="--i:5">Projet</a> 
+            <a href="#parcours" style="--i:4">Parcours</a> 
+            <a href="#projet" style="--i:5">Projet</a> 
         </nav>
     </header>
     
@@ -40,7 +40,7 @@
         </div>
         <div class="home-content">
             <h1>Salut, Je suis</h1>
-            <h2>SAIDOMAR Mourad</h2>
+            <h2>SAIDOMAR <span class="nom">Mourad</span></h2>
             <h3>BTS SIO OPTIONS SISR</h3>
             <a href="file/CV_SAIDOMAR-Mourad.pdf" class="btn" download="CV_SAIDOMAR-Mourad.pdf">Mon CV</a>
         </div>
@@ -62,15 +62,18 @@
     <!-- section A propos -->
     <section class="about" id="about">
         <div class="moi">
-            <div class="about-img">
-                <img src="image/about me.png" alt="">      
-            </div>
+            <img src="image/about me.png" alt="">
             <div class="about-content">
                 <h1 class="heading">A propos de <span>Moi</span></h1>
                 <p>Actuellement, je suis en BTS SIO ( Services Informatiques aux Organisations) Option SISR (Solutions d’Infrastructure Systèmes et Réseaux). Je suis étudiant au lycée YOUNOUSSA BAMANA situé à Mayotte. </p>
                 <p>Sur ce portfolio, vous trouverez toutes les informations relatives aux épreuves E4 et E6 ainsi qu’à mes stages professionnels effectués durant ma période de formation.</p>
-                <a href="file/CV_SAIDOMAR-Mourad.pdf" class="btn" download="CV_SAIDOMAR-Mourad.pdf">Mon CV</a>
+                <div class="about-btn">
+                    <a href="file/CV_SAIDOMAR-Mourad.pdf" class="btn" download="CV_SAIDOMAR-Mourad.pdf">Mon CV</a>
+                    <a href="file/Tableau_de_synthèse_BTS_SIO_SISR_20232024_SAIDOMAR_Mourad.xlsx" class="btn" download="Tableau_de_synthèse_BTS_SIO_SISR_20232024_SAIDOMAR_Mourad.xlsx">Tableau de synthèse</a>
+                </div>
             </div>
+            
+
         </div>
 
         <div class="exp-box">
@@ -223,7 +226,7 @@
     </section>
 
 <!-- section Parcours -->
-    <section class="Parcours" id="Parcours">
+    <section class="Parcours" id="parcours">
         <div class="heading">Parcours</div>
         <div class="timeline">
             <div class="timeline-row">
@@ -337,7 +340,7 @@
         </div>
     </section>
 
-    <section class="projet" id="Projet">
+    <section class="projet" id="projet">
         <div class="heading">Projets</div>
         <div class="pro-cont">
             <div class="pro-box">
@@ -348,7 +351,10 @@
                     <i class='bx bx-chevron-right'></i>Antivirus centralisé via ClamAV <br>
                     <i class='bx bx-chevron-right'></i>Authentification des utilisateurs via LDAP (ADDS) <br>
                     <i class='bx bx-chevron-right'></i>Création d'un GPO sous Windows Server pour configurer le proxy des postes clients <br>
-                    <a href="file/procédure squid.pdf" class="btn" download="procédure squid.pdf">Télecharger la procédure</a>
+                    <div class="pro-btn">
+                        <a href="file/procédure squid.pdf" class="btn" download="procédure squid.pdf">Télecharger la procédure</a>
+                        <a href="" class="btn" download="">Fiche déscriptive</a>
+                    </div>
 
                 </p>
 
@@ -364,7 +370,11 @@
                     <i class='bx bx-chevron-right'></i>Création de GPO <br>
                     <i class='bx bx-chevron-right'></i>Mettre en œuvre et gérer les dossiers de travail <br>
                     <i class='bx bx-chevron-right'></i>Sauvegarde et restauration <br>
-                    <a href="" class="btn" download="">Télecharger la procédure</a>
+                    <div class="pro-btn">
+                        <a href="" class="btn" download="">Télecharger la procédure</a>
+                        <a href="" class="btn" download="">Fiche déscriptive</a>
+                    </div>
+                    
 
                 </p>
 
@@ -374,9 +384,36 @@
         </div>
     </section>
 
+    <footer>
+        <div class="waves">
+            <div class="wave" id="wave1"></div>
+            <div class="wave" id="wave2"></div>
+            <div class="wave" id="wave3"></div>
+            <div class="wave" id="wave4"></div>
+
+        </div>
+        <ul class="social_icon">
+            <li><a href="#"><ion-icon name="logo-instagram"></ion-icon></a></li>
+            <li><a href="#"><ion-icon name="mail-outline"></ion-icon></a></li>
+            <li><a href="#"><ion-icon name="logo-facebook"></ion-icon></a></li>
+
+        </ul>
+        <ul class="menu">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">A propos</a></li>
+            <li><a href="#competences">Compétences</a></li>
+            <li><a href="#parcours">Parcours</a></li>
+            <li><a href="#projet">Projet</a></li>
+        </ul>
+        <p>Copyright 2024 © SAIDOMAR Mourad | Tous droits réservés.</p>
+    </footer>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script src="script.js"></script>
-</body> 
+</body>
+
+
 </html>
 
 
