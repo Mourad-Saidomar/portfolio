@@ -562,23 +562,25 @@ html {
 
 .about .moi {
     display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 50px;
-
-
+    margin: 2%;
+    justify-content: center;
 }
 
-.about .moi img {
-    display: flex;
+.about-img {
+    width: 100%;
+    height: 100%;
+}
+
+.about .moi .about-img img {
     height: 550px;
     width: 700px;
     pointer-events: none;
 }
 
-
 .about .moi .about-content {
     align-content: center;
-    max-width: 43%;
+    padding: 20px;
+    
 }
 
 .about-content h1 {
@@ -698,7 +700,7 @@ html {
     100% {
       transform: translate(1px, -2px) rotate(0deg);
     }
-  }
+}
   
 
 .opt .title {
