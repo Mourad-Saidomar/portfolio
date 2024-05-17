@@ -158,7 +158,7 @@ footer .wave#wave4 {
 
 /* Définir la largeur de la barre de défilement personnalisée */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 0.5rem;
 }
 
 /* Définir la couleur de la barre de défilement */
@@ -186,8 +186,8 @@ html {
 }
 
 .shape:nth-of-type(1){
-    width: 400px;
-    height: 400px;
+    width: 29.28%;
+    height: 29.28%;
     background: linear-gradient(64deg, #f34868 23%, #f24768 23%, #9e00ff 80%);
     animation: wave 8s ease-in-out infinite;
 }
@@ -321,22 +321,23 @@ html {
 }
 
 .home-box {
+    width: 100%;
+    height: 90%;
     position: relative;
     /* background: red; */
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    top: -550px;
+    bottom: 105%;
 }
 
 .home-sci {
+    width: 20%;
     /* background: orange; */
-    padding: 0 5% 0;
 }
 
 
 .home-content {
-    max-width: 500px;
+    width: 50%;
     /* background: yellow; */
 }
 
@@ -494,6 +495,7 @@ html {
 }
  
 .home-img {
+    /* background: blue; */
     width: 410px;
     height: 410px;
     opacity: 0;
@@ -610,14 +612,11 @@ html {
 }
 
 .about-img {
-    width: 100%;
+    width: 130%;
     height: 100%;
 }
 
 .about .moi .about-img img {
-    max-width: 100%;
-    height: auto;
-    width: 700px;
     pointer-events: none;
 }
 
