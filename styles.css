@@ -551,10 +551,10 @@ html {
 
 .home .home-img img {
     position: absolute;
-    bottom: 0.1px;
-    left: 58%;
+    bottom: -9%;
+    left: 50%;
     transform: translateX(-50%);
-    max-width: 380px;
+    max-width: 400px;
     object-fit: cover;
 }
 
@@ -607,6 +607,7 @@ html {
 
 .about .moi {
     display: flex;
+    padding: 5%;
     margin: 2%;
     justify-content: center;
 }
@@ -991,6 +992,10 @@ html {
     font-weight: 700;
     text-shadow: 0 5px 10px rgba(0,0,0,.2);
     font-size: 50px;
+}
+
+.projet p {
+    margin-left: 5%;
 }
 
 .pro-cont {
