@@ -985,6 +985,7 @@ html {
     padding-bottom: 20%;
 }
 
+
 .projet .heading {
     text-align: center;
     padding-bottom: 15px;
@@ -996,6 +997,9 @@ html {
 
 .projet p {
     margin-left: 5%;
+    margin-right: 5%;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .pro-cont {
@@ -1026,6 +1030,7 @@ html {
     font-size: 20px;
     font-weight: 700;
     text-align: center;
+    justify-content: center;
     margin: 32px 0 16px 30px;
     animation: slideRight 1s ease forwards;
     animation-delay: .6s;
