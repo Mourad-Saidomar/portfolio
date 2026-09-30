@@ -1,23 +1,35 @@
-import { z } from "zod";
+// zod/mini : même moteur que zod, mais « tree-shakable » (quelques Ko dans le bundle public
+// au lieu de la bibliothèque complète). Le schéma est partagé client/serveur.
+import * as z from "zod/mini";
 
 /** Schéma partagé client/serveur du formulaire de contact. */
 export const contactSchema = z.object({
-  name: z.string().trim().min(2, "Indiquez votre nom (2 caractères minimum).").max(120, "120 caractères maximum."),
+  name: z
+    .string()
+    .check(
+      z.trim(),
+      z.minLength(2, "Indiquez votre nom (2 caractères minimum)."),
+      z.maxLength(120, "120 caractères maximum."),
+    ),
   email: z
     .string()
-    .trim()
-    .min(1, "Indiquez votre adresse e-mail.")
-    .max(254, "Adresse e-mail trop longue.")
-    .pipe(z.email("Adresse e-mail invalide, par exemple : nom@entreprise.fr.")),
+    .check(
+      z.trim(),
+      z.minLength(1, "Indiquez votre adresse e-mail."),
+      z.maxLength(254, "Adresse e-mail trop longue."),
+      z.regex(z.regexes.email, "Adresse e-mail invalide, par exemple : nom@entreprise.fr."),
+    ),
   message: z
     .string()
-    .trim()
-    .min(10, "Votre message est un peu court (10 caractères minimum).")
-    .max(5000, "5 000 caractères maximum."),
+    .check(
+      z.trim(),
+      z.minLength(10, "Votre message est un peu court (10 caractères minimum)."),
+      z.maxLength(5000, "5 000 caractères maximum."),
+    ),
   /** Honeypot : invisible pour les humains, doit rester vide. */
-  website: z.string().max(0).optional().or(z.literal("")),
+  website: z.optional(z.string().check(z.maxLength(0))),
   /** Horodatage d'affichage du formulaire (ms) : les robots soumettent en moins de 3 s. */
-  startedAt: z.number().int().positive(),
+  startedAt: z.int().check(z.positive()),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

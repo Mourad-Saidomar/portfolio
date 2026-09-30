@@ -43,7 +43,7 @@ export default async function AboutPage() {
               <span aria-hidden className="h-px w-8 bg-line" />À propos
             </p>
             <h1 className="mt-6 font-display text-h1">
-              {profile.fullName}, <span className="text-accent italic">{profile.headline.toLowerCase()}</span>.
+              {profile.fullName}, <span className="text-accent">{profile.headline.toLowerCase()}</span>.
             </h1>
             <div className="mt-10 max-w-[62ch] space-y-5 text-lead">
               {paragraphs.map((p, i) => (
@@ -69,7 +69,7 @@ export default async function AboutPage() {
                   src={profile.photo.url}
                   alt={profile.photo.alt}
                   fill
-                  priority
+                  loading="eager"
                   sizes="(min-width: 1024px) 30vw, 384px"
                   className="object-cover object-top"
                 />

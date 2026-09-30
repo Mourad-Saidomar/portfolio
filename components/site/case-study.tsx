@@ -92,7 +92,7 @@ export function CaseStudy({ project, next }: Props) {
 
       <div className="container-page mt-12 md:mt-16">
         <ViewTransition name={`project-cover-${project.slug}`}>
-          <ProjectCover project={project} priority sizes="(min-width: 1320px) 1224px, 100vw" />
+          <ProjectCover project={project} eager sizes="(min-width: 1320px) 1224px, 100vw" />
         </ViewTransition>
       </div>
 

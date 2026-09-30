@@ -52,7 +52,7 @@ export default async function HomePage() {
 
             <h1 id="hero-title" className="mt-8 font-display text-display">
               {profile?.fullName ?? "Mourad Saidomar"}
-              <span className="mt-3 block text-h2 text-accent italic">{profile?.headline ?? "Développeur web"}</span>
+              <span className="mt-3 block text-h2 text-accent">{profile?.headline ?? "Développeur web"}</span>
             </h1>
 
             {profile?.tagline && <p className="mt-8 max-w-[34ch] text-h3 text-ink">{profile.tagline}</p>}
@@ -80,7 +80,7 @@ export default async function HomePage() {
                   src={profile.photo.url}
                   alt={profile.photo.alt}
                   fill
-                  priority
+                  loading="eager"
                   sizes="(min-width: 1024px) 30vw, (min-width: 640px) 384px, 100vw"
                   className="object-cover object-top"
                 />

@@ -7,19 +7,23 @@ import "./globals.css";
 const display = Instrument_Serif({
   variable: "--font-instrument",
   weight: "400",
-  style: ["normal", "italic"],
+  style: "normal",
   subsets: ["latin"],
   display: "swap",
 });
 
+// « optional » : le texte courant (souvent l'élément LCP) n'est jamais repeint après coup.
+// Le fallback généré par next/font a des métriques ajustées : pas de décalage de mise en page.
 const sans = Schibsted_Grotesk({
   variable: "--font-schibsted",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
 });
 
+// Une seule graisse utilisée (métadonnées) : fichier statique plus léger que la version variable.
 const mono = JetBrains_Mono({
   variable: "--font-jetbrains",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
   preload: false,

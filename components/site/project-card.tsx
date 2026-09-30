@@ -11,17 +11,17 @@ type Props = {
   index: number;
   size?: "large" | "default";
   headingLevel?: "h2" | "h3";
-  priority?: boolean;
+  eager?: boolean;
 };
 
 /** Carte projet : toute la surface est cliquable via un seul lien (pas de liens imbriqués). */
-export function ProjectCard({ project, index, size = "default", headingLevel: Heading = "h3", priority }: Props) {
+export function ProjectCard({ project, index, size = "default", headingLevel: Heading = "h3", eager }: Props) {
   return (
     <article className="group relative rounded-(--radius-lg) has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-accent">
       <ViewTransition name={`project-cover-${project.slug}`}>
         <ProjectCover
           project={project}
-          priority={priority}
+          eager={eager}
           wide={size === "large"}
           sizes={size === "large" ? "(min-width: 1320px) 1224px, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
         />

@@ -7,7 +7,8 @@ type Props = {
   /** Format panoramique (carte mise en avant sur grand écran). */
   wide?: boolean;
   sizes: string;
-  priority?: boolean;
+  /** Chargement immédiat (image visible dès l’arrivée sur la page). */
+  eager?: boolean;
   className?: string;
 };
 
@@ -15,7 +16,7 @@ type Props = {
  * Couverture 16:10. Sans image, une composition typographique prend le relais
  * (initiales + technologie principale) : jamais de cadre vide.
  */
-export function ProjectCover({ project, sizes, priority, wide, className }: Props) {
+export function ProjectCover({ project, sizes, eager, wide, className }: Props) {
   return (
     <div
       className={cn(
@@ -30,7 +31,7 @@ export function ProjectCover({ project, sizes, priority, wide, className }: Prop
           alt={project.cover.alt}
           fill
           sizes={sizes}
-          priority={priority}
+          loading={eager ? "eager" : "lazy"}
           className="object-cover transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03]"
         />
       ) : (

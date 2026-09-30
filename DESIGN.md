@@ -76,9 +76,9 @@ Source unique : [`app/globals.css`](app/globals.css) (variables CSS exposées à
 
 | Token | Famille | Usage |
 |---|---|---|
-| `--font-display` | Instrument Serif 400 (+ italique) | h1, h2, grands chiffres |
-| `--font-sans` | Schibsted Grotesk variable | texte, UI |
-| `--font-mono` | JetBrains Mono variable | dates, index, tags, code |
+| `--font-display` | Instrument Serif 400, romain seul (`display: swap`) | h1, h2, grands chiffres |
+| `--font-sans` | Schibsted Grotesk variable (`display: optional`) | texte, UI |
+| `--font-mono` | JetBrains Mono 400, fichier statique | dates, index, tags, code |
 
 Échelle fluide (`clamp`, 360 px → 1440 px) :
 
@@ -110,7 +110,7 @@ Source unique : [`app/globals.css`](app/globals.css) (variables CSS exposées à
 | `--dur-base` | 300 ms | survols de cartes |
 | `--dur-slow` | 500 ms | apparitions au scroll |
 
-- Apparition au scroll (Motion, `LazyMotion` + `domAnimation` pour limiter le JS) : opacité 0→1, translation 12 px, une seule fois.
+- Apparition au scroll (Motion : `useAnimate` de `motion/react-mini` + `inView`, basés sur la Web Animations API, quelques Ko) : opacité 0→1, translation 12 px, une seule fois. Le HTML serveur reste toujours visible : seul le client masque ce qui est sous la ligne de flottaison, puis le révèle.
 - Transitions de page : React `<ViewTransition>` (API native du navigateur, 0 Ko de JS en plus) — fondu + glissement de 24 px ; morphing de la couverture projet → hero de l'étude de cas.
 - `prefers-reduced-motion: reduce` : toutes les translations supprimées, fondus conservés ≤ 150 ms, animations au scroll désactivées.
 
@@ -122,3 +122,24 @@ Source unique : [`app/globals.css`](app/globals.css) (variables CSS exposées à
 - **Timeline** : rail vertical fin, pastille par étape, dates en mono, filtre « Tout / Expériences / Formations » en boutons segmentés (`aria-pressed`).
 - **SkillGroup** : titre de domaine + liste en « chips » non interactives.
 - **ThemeToggle** : trois états (système / clair / sombre), sans flash grâce à un script inline avant hydratation.
+
+## 6. Arbitrages de performance (phase 7)
+
+Mesures Lighthouse 12 en local, build de production :
+
+| | Performance | Accessibilité | Bonnes pratiques | SEO |
+|---|---|---|---|---|
+| Mobile (toutes les pages) | 94 – 96 | 100 | 100 | 100 |
+| Desktop | 100 | 100 | 100 | 100 |
+
+LCP mobile **observé** ≈ 0,24 s ; LCP **simulé** par Lighthouse (4G lent, CPU ×4) : 2,7 à 3,1 s, car la simulation place sur le chemin critique tout le JavaScript Next.js/React téléchargé avant l'affichage.
+
+Décisions prises :
+
+- **Italique d'Instrument Serif retirée** du site (−15 Ko) : le métier du hero est en romain, couleur lagon. L'italique reste dans les images Open Graph, générées côté serveur.
+- **Texte courant en `display: optional`** : le paragraphe LCP n'est jamais repeint ; le fallback à métriques ajustées de `next/font` évite tout décalage.
+- **JetBrains Mono statique 400** au lieu du fichier variable (−20 Ko).
+- **Motion en API compacte** (WAAPI) au lieu du moteur complet (−31 Ko gzip).
+- **`zod/mini`** pour le formulaire public au lieu de Zod complet.
+- **CSS inline** (`experimental.inlineCss`) : une requête bloquante de moins.
+- **Pas de squelette `loading.tsx`** sur les études de cas : le CLS passe de 0,23 à 0.

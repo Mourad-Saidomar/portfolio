@@ -1,11 +1,12 @@
 "use client";
 
 import { BriefcaseBusiness, GraduationCap } from "lucide-react";
-import { AnimatePresence, m } from "motion/react";
+import { useAnimate } from "motion/react-mini";
 import { useState } from "react";
 import { formatPeriod } from "@/lib/format";
 import type { TimelineEntry, TimelineKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { EASE_OUT, prefersReducedMotion } from "./motion";
 
 type Filter = "all" | TimelineKind;
 
@@ -19,6 +20,19 @@ const KIND_LABEL: Record<TimelineKind, string> = { experience: "Expérience", ed
 
 export function Timeline({ entries }: { entries: TimelineEntry[] }) {
   const [filter, setFilter] = useState<Filter>("all");
+  const [listRef, animate] = useAnimate<HTMLOListElement>();
+
+  function select(value: Filter) {
+    setFilter(value);
+    // Fondu + légère montée de la nouvelle liste (désactivé en mouvement réduit).
+    if (listRef.current && !prefersReducedMotion()) {
+      animate(
+        listRef.current,
+        { opacity: [0, 1], transform: ["translateY(8px)", "translateY(0px)"] },
+        { duration: 0.3, ease: EASE_OUT },
+      );
+    }
+  }
   const visible = filter === "all" ? entries : entries.filter((e) => e.kind === filter);
   const count = (value: Filter) => (value === "all" ? entries.length : entries.filter((e) => e.kind === value).length);
 
@@ -36,7 +50,7 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
               key={option.value}
               type="button"
               aria-pressed={pressed}
-              onClick={() => setFilter(option.value)}
+              onClick={() => select(option.value)}
               className={cn(
                 "inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm transition-colors duration-(--duration-fast)",
                 pressed ? "bg-ink text-bg" : "text-muted hover:text-ink",
@@ -54,20 +68,11 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
         {visible.length} étape{visible.length > 1 ? "s" : ""} affichée{visible.length > 1 ? "s" : ""}
       </p>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <m.ol
-          key={filter}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-12 border-t border-line"
-        >
-          {visible.map((entry) => (
-            <TimelineItem key={entry.id} entry={entry} />
-          ))}
-        </m.ol>
-      </AnimatePresence>
+      <ol ref={listRef} className="mt-12 border-t border-line">
+        {visible.map((entry) => (
+          <TimelineItem key={entry.id} entry={entry} />
+        ))}
+      </ol>
     </div>
   );
 }
@@ -91,7 +96,7 @@ function TimelineItem({ entry }: { entry: TimelineEntry }) {
         </p>
       </div>
       <div className="md:col-span-9">
-        <h3 className="font-display text-h3">{entry.title}</h3>
+        <h2 className="font-display text-h3">{entry.title}</h2>
         <p className="mt-1 text-muted">
           {entry.organization}
           {entry.location && <span className="text-subtle"> · {entry.location}</span>}

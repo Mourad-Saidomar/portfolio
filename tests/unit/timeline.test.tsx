@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { LazyMotion, domAnimation } from "motion/react";
 import { describe, expect, it } from "vitest";
 import { Timeline } from "@/components/site/timeline";
 import type { TimelineEntry } from "@/lib/types";
@@ -25,17 +24,13 @@ const entries = [
 ];
 
 function setup() {
-  return render(
-    <LazyMotion features={domAnimation}>
-      <Timeline entries={entries} />
-    </LazyMotion>,
-  );
+  return render(<Timeline entries={entries} />);
 }
 
 describe("Timeline", () => {
   it("affiche toutes les étapes avec leurs compteurs", () => {
     setup();
-    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(3);
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(3);
     const group = screen.getByRole("group", { name: "Filtrer le parcours" });
     expect(within(group).getByRole("button", { name: /Tout\s*3/ })).toHaveAttribute("aria-pressed", "true");
     expect(within(group).getByRole("button", { name: /Expériences\s*2/ })).toBeInTheDocument();

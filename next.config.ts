@@ -25,6 +25,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   cacheComponents: true,
   poweredByHeader: false,
+  experimental: {
+    // CSS Tailwind compact : l'inliner supprime une requête bloquante (visiteurs majoritairement nouveaux).
+    inlineCss: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: supabaseImagePattern(),
