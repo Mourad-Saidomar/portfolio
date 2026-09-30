@@ -1,6 +1,7 @@
 import { ArrowUpRight, Download, Mail, MapPin, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/site/contact-form";
+import { MaskWords } from "@/components/site/mask-words";
 import { PageTransition } from "@/components/site/page-transition";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { getProfile } from "@/lib/data/public";
@@ -58,7 +59,9 @@ export default async function ContactPage() {
               <span aria-hidden className="h-px w-8 bg-line" />
               Contact
             </p>
-            <h1 className="mt-6 font-display text-h1">Parlons de votre projet.</h1>
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95] tracking-[-0.025em]">
+              <MaskWords text="Parlons de votre projet." delay={100} />
+            </h1>
             <p className="mt-6 max-w-[44ch] text-lead text-muted">
               Une offre de stage, une mission ou simplement une question : écrivez-moi, je réponds à chaque message.
             </p>

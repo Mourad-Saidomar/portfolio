@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import type { ProjectSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -7,16 +8,18 @@ type Props = {
   /** Format panoramique (carte mise en avant sur grand écran). */
   wide?: boolean;
   sizes: string;
-  /** Chargement immédiat (image visible dès l’arrivée sur la page). */
+  /** Chargement immédiat (image visible dès l'arrivée sur la page). */
   eager?: boolean;
+  /** Pastille « Voir » qui suit le curseur (cartes cliquables uniquement). */
+  cursor?: boolean;
   className?: string;
 };
 
 /**
- * Couverture 16:10. Sans image, une composition typographique prend le relais
- * (initiales + technologie principale) : jamais de cadre vide.
+ * Couverture 16:10 avec parallaxe au défilement (CSS, sans JS) et léger zoom au survol.
+ * Sans image, une composition typographique prend le relais : jamais de cadre vide.
  */
-export function ProjectCover({ project, sizes, eager, wide, className }: Props) {
+export function ProjectCover({ project, sizes, eager, wide, cursor, className }: Props) {
   return (
     <div
       className={cn(
@@ -26,29 +29,42 @@ export function ProjectCover({ project, sizes, eager, wide, className }: Props) 
       )}
     >
       {project.cover ? (
-        <Image
-          src={project.cover.url}
-          alt={project.cover.alt}
-          fill
-          sizes={sizes}
-          loading={eager ? "eager" : "lazy"}
-          className="object-cover transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03]"
-        />
+        <div className="parallax-img absolute inset-0">
+          <Image
+            src={project.cover.url}
+            alt={project.cover.alt}
+            fill
+            sizes={sizes}
+            loading={eager ? "eager" : "lazy"}
+            className="object-cover transition-[scale] duration-[1.1s] ease-(--ease-out) group-hover:scale-[1.05]"
+          />
+        </div>
       ) : (
         <div
           aria-hidden
-          className="absolute inset-0 flex flex-col justify-between p-6 transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03] md:p-8"
+          className="absolute inset-0 flex flex-col justify-between p-6 md:p-8"
           style={{
             backgroundImage:
-              "linear-gradient(to right, var(--line) 1px, transparent 1px), linear-gradient(to bottom, var(--line) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
+              "radial-gradient(80% 90% at 100% 0%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%), linear-gradient(to right, var(--line) 1px, transparent 1px), linear-gradient(to bottom, var(--line) 1px, transparent 1px)",
+            backgroundSize: "100% 100%, 48px 48px, 48px 48px",
           }}
         >
           <span className="font-mono text-meta uppercase text-subtle">{project.stack[0] ?? "Projet"}</span>
-          <span className="font-display text-[clamp(3.5rem,10vw,7rem)] leading-none text-accent">
+          <span className="font-display text-[clamp(3.5rem,10vw,7.5rem)] leading-none text-accent transition-[translate] duration-700 ease-(--ease-out) group-hover:-translate-y-2">
             {initials(project.title)}
           </span>
         </div>
+      )}
+
+      {cursor && (
+        <span
+          aria-hidden
+          className="cursor-disc z-10 grid size-24 place-items-center rounded-full bg-accent text-sm font-medium text-on-accent shadow-lift"
+        >
+          <span className="flex items-center gap-1">
+            Voir <ArrowUpRight className="size-4" />
+          </span>
+        </span>
       )}
     </div>
   );

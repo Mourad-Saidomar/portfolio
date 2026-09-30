@@ -68,11 +68,16 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
         {visible.length} étape{visible.length > 1 ? "s" : ""} affichée{visible.length > 1 ? "s" : ""}
       </p>
 
-      <ol ref={listRef} className="mt-12 border-t border-line">
-        {visible.map((entry) => (
-          <TimelineItem key={entry.id} entry={entry} />
-        ))}
-      </ol>
+      <div className="relative mt-12">
+        {/* Rail : piste fixe + tracé lagon qui se dessine au défilement (CSS piloté par le scroll). */}
+        <span aria-hidden className="absolute top-0 bottom-0 left-[5px] w-px bg-line md:left-[7px]" />
+        <span aria-hidden className="rail absolute top-0 bottom-0 left-[5px] w-px bg-accent md:left-[7px]" />
+        <ol ref={listRef} className="border-t border-line">
+          {visible.map((entry) => (
+            <TimelineItem key={entry.id} entry={entry} />
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
@@ -82,7 +87,14 @@ function TimelineItem({ entry }: { entry: TimelineEntry }) {
   const period = formatPeriod(entry);
 
   return (
-    <li className="relative grid gap-4 border-b border-line py-8 md:grid-cols-12 md:gap-8 md:py-10">
+    <li className="group relative grid gap-4 border-b border-line py-8 pl-8 md:grid-cols-12 md:gap-8 md:py-10 md:pl-12">
+      <span
+        aria-hidden
+        className={cn(
+          "absolute top-9 left-0 size-[11px] rounded-full border-2 bg-bg transition-transform duration-500 ease-(--ease-out) group-hover:scale-150 md:top-11 md:size-[15px]",
+          entry.isCurrent ? "border-success bg-success" : "border-accent",
+        )}
+      />
       <div className="flex items-center gap-3 md:col-span-3 md:flex-col md:items-start md:gap-2">
         <p className="font-mono text-meta text-ink">
           {entry.isCurrent && (

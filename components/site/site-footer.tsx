@@ -3,6 +3,8 @@ import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { getProfile } from "@/lib/data/public";
 import { NAV_LINKS } from "@/lib/navigation";
+import { MotionToggle } from "./motion-toggle";
+import { Reveal } from "./motion";
 
 const FOOTER_LINKS = [{ href: "/", label: "Accueil" }, ...NAV_LINKS, { href: "/contact", label: "Contact" }];
 
@@ -81,9 +83,19 @@ export async function SiteFooter() {
           </ul>
         </div>
 
-        <p className="font-mono text-meta text-subtle md:col-span-12">
-          © {name} — conçu et développé avec Next.js et Supabase.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-4 md:col-span-12">
+          <p className="font-mono text-meta text-subtle">© {name} — conçu et développé avec Next.js et Supabase.</p>
+          <MotionToggle />
+        </div>
+      </div>
+
+      {/* Signature : le nom en très grand, révélé à l'arrivée en bas de page. */}
+      <div aria-hidden className="overflow-hidden">
+        <Reveal variant="clip">
+          <p className="container-page -mb-[0.18em] font-display text-[clamp(3.5rem,1rem+14vw,16rem)] leading-[0.9] tracking-[-0.04em] whitespace-nowrap text-transparent [-webkit-text-stroke:1px_color-mix(in_oklab,var(--ink)_28%,transparent)] select-none">
+            {name}
+          </p>
+        </Reveal>
       </div>
     </footer>
   );

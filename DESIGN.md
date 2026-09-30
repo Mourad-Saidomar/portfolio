@@ -123,7 +123,29 @@ Source unique : [`app/globals.css`](app/globals.css) (variables CSS exposées à
 - **SkillGroup** : titre de domaine + liste en « chips » non interactives.
 - **ThemeToggle** : trois états (système / clair / sombre), sans flash grâce à un script inline avant hydratation.
 
-## 6. Arbitrages de performance (phase 7)
+## 6. Système d'animation (v2)
+
+Trois familles, chacune avec l'outil le plus léger possible :
+
+| Famille | Technique | Exemples |
+|---|---|---|
+| **Entrées au chargement** | CSS pur (`.enter`, `.mask-line`, `.curtain`, `.draw-line`, délai `--d`) : démarrent au premier rendu, sans attendre le JS | nom du hero qui monte ligne par ligne, filet qui se trace, portrait révélé en rideau, titres de page mot par mot |
+| **Au défilement, une fois** | Motion (`useAnimate` de `motion/react-mini` + `inView`) | titres de section mot par mot (`RevealWords`), cartes en rideau (`Reveal variant="clip"`), compteurs (`CountUp`) |
+| **Continues, liées au scroll** | Animations CSS pilotées par le défilement (`animation-timeline`), amélioration progressive | parallaxe des couvertures, rail du parcours qui se dessine, en-tête qui se densifie, barre de progression de lecture |
+| **Ambiantes (boucles)** | CSS, classe `.ambient` | halos lagon/corail qui dérivent, bandeau des compétences, badge circulaire, aurore du bandeau de contact |
+| **Au pointeur** | petits composants client (`PointerSurface`, `Magnetic`) | pastille « Voir » qui suit le curseur, cartes spotlight, boutons magnétiques, reflet des boutons principaux |
+
+Garde-fous :
+
+- **Rien n'est caché sans JS** : le HTML serveur est toujours visible ; seul le client masque ce qui est sous la ligne de flottaison, puis le révèle.
+- **LCP préservé** : le paragraphe d'introduction du hero glisse sans fondu (`.enter-soft`), il est peint immédiatement.
+- **Texte écrit une seule fois** : les mots animés sont séparés par de vraies espaces (lecteurs d'écran et moteurs de recherche lisent le titre normalement).
+- **WCAG 2.2.2** : un bouton « Mettre en pause les animations » (bandeau et pied de page) suspend toutes les boucles ; choix mémorisé (`localStorage`, appliqué avant le premier rendu).
+- **`prefers-reduced-motion`** : aucune animation ne tourne (vérifié par un test E2E).
+- Effets au pointeur désactivés au tactile.
+- Décor : halos en dégradés radiaux (sans `filter: blur`, peu coûteux), grille pointillée masquée, grain photographique à 4,5 % d'opacité.
+
+## 7. Arbitrages de performance (phase 7)
 
 Mesures Lighthouse 12 en local, build de production :
 

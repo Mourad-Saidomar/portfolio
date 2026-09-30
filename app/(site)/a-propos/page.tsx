@@ -1,9 +1,12 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ContactCta } from "@/components/site/contact-cta";
 import { EmptyState } from "@/components/site/empty-state";
+import { PointerSurface } from "@/components/site/interactive";
 import { PersonJsonLd } from "@/components/site/json-ld";
+import { MaskWords } from "@/components/site/mask-words";
 import { Reveal } from "@/components/site/motion";
 import { PageTransition } from "@/components/site/page-transition";
 import { ButtonLink } from "@/components/ui/button";
@@ -39,20 +42,23 @@ export default async function AboutPage() {
       <section className="container-page pt-14 pb-16 md:pt-24 md:pb-24">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-7">
-            <p className="flex items-center gap-3 font-mono text-meta uppercase text-subtle">
-              <span aria-hidden className="h-px w-8 bg-line" />À propos
+            <p className="enter flex items-center gap-3 font-mono text-meta uppercase text-subtle">
+              <span aria-hidden className="draw-line h-px w-8 bg-accent" style={{ "--d": "150ms" } as CSSProperties} />À propos
             </p>
-            <h1 className="mt-6 font-display text-h1">
-              {profile.fullName}, <span className="text-accent">{profile.headline.toLowerCase()}</span>.
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95] tracking-[-0.025em]">
+              <MaskWords text={`${profile.fullName},`} delay={100} />{" "}
+              <span className="text-accent">
+                <MaskWords text={`${profile.headline.toLowerCase()}.`} delay={260} />
+              </span>
             </h1>
-            <div className="mt-10 max-w-[62ch] space-y-5 text-lead">
+            <div className="enter-soft mt-10 max-w-[62ch] space-y-5 text-lead" style={{ "--d": "400ms" } as CSSProperties}>
               {paragraphs.map((p, i) => (
                 <p key={i} className={i === 0 ? "text-ink" : "text-muted"}>
                   {p}
                 </p>
               ))}
             </div>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="enter mt-10 flex flex-wrap gap-3" style={{ "--d": "550ms" } as CSSProperties}>
               <ButtonLink href="/projets" icon={<ArrowRight className="size-4" />}>
                 Voir mes projets
               </ButtonLink>
@@ -64,7 +70,10 @@ export default async function AboutPage() {
 
           {profile.photo && (
             <figure className="lg:col-span-4 lg:col-start-9">
-              <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-(--radius-lg) bg-sunken lg:max-w-none">
+              <div
+                className="curtain relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-(--radius-lg) bg-sunken lg:max-w-none"
+                style={{ "--d": "250ms" } as CSSProperties}
+              >
                 <Image
                   src={profile.photo.url}
                   alt={profile.photo.alt}
@@ -89,9 +98,11 @@ export default async function AboutPage() {
           <SectionHeading index="01" eyebrow="Valeurs" id="valeurs" title="Ce qui guide mon travail." />
           <ol className="mt-14 grid gap-10 md:mt-20 md:grid-cols-3 md:gap-8">
             {profile.values.map((value, i) => (
-              <Reveal as="li" key={value.title} delay={i * 0.08} className="border-t border-ink pt-6">
-                <span className="font-mono text-meta text-coral">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-4 font-display text-h3">{value.title}</h3>
+              <Reveal as="li" key={value.title} delay={i * 0.1} className="group border-t border-ink pt-6">
+                <span className="font-display text-[4rem] leading-none text-coral transition-colors duration-500 group-hover:text-accent">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-6 font-display text-h3">{value.title}</h3>
                 <p className="mt-3 text-muted">{value.description}</p>
               </Reveal>
             ))}
@@ -102,11 +113,13 @@ export default async function AboutPage() {
       {profile.differentiators.length > 0 && (
         <section aria-labelledby="difference" className="container-page section-y border-t border-line">
           <SectionHeading index="02" eyebrow="Différence" id="difference" title="Ce qui me distingue." />
-          <ol className="mt-14 grid gap-px overflow-hidden rounded-(--radius-lg) border border-line bg-line md:mt-20 md:grid-cols-3">
+          <ol className="mt-14 grid gap-4 md:mt-20 md:grid-cols-3">
             {profile.differentiators.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 0.08} className="bg-bg p-8 md:p-10">
-                <h3 className="font-display text-h3">{item.title}</h3>
-                <p className="mt-3 text-muted">{item.description}</p>
+              <Reveal as="li" key={item.title} delay={i * 0.1}>
+                <PointerSurface className="spotlight h-full overflow-hidden rounded-(--radius-lg) border border-line bg-surface p-8 transition-[border-color,translate] duration-500 ease-(--ease-out) hover:-translate-y-1 hover:border-accent/50 md:p-10">
+                  <h3 className="font-display text-h3">{item.title}</h3>
+                  <p className="mt-3 text-muted">{item.description}</p>
+                </PointerSurface>
               </Reveal>
             ))}
           </ol>

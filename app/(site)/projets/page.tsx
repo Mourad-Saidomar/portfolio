@@ -28,7 +28,7 @@ export default async function ProjectsPage() {
         {projects.length > 0 ? (
           <ul className="mt-16 grid gap-x-8 gap-y-16 md:mt-24 md:grid-cols-2">
             {projects.map((project, i) => (
-              <Reveal as="li" key={project.id} delay={(i % 2) * 0.08}>
+              <Reveal as="li" key={project.id} variant="clip" delay={(i % 2) * 0.12} className={i % 2 === 1 ? "md:mt-24" : undefined}>
                 <ProjectCard project={project} index={i} headingLevel="h2" eager={i < 2} />
               </Reveal>
             ))}

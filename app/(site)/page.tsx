@@ -1,14 +1,15 @@
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ContactCta } from "@/components/site/contact-cta";
 import { EmptyState } from "@/components/site/empty-state";
+import { Hero } from "@/components/site/hero";
+import { PointerSurface } from "@/components/site/interactive";
 import { PersonJsonLd } from "@/components/site/json-ld";
+import { Marquee } from "@/components/site/marquee";
 import { Reveal } from "@/components/site/motion";
 import { PageTransition } from "@/components/site/page-transition";
 import { ProjectCard } from "@/components/site/project-card";
-import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile, getProjects, getSkillCategories, getTimeline } from "@/lib/data/public";
 import { formatPeriod } from "@/lib/format";
@@ -26,92 +27,33 @@ export default async function HomePage() {
   ]);
 
   const featured = (projects.some((p) => p.featured) ? projects.filter((p) => p.featured) : projects).slice(0, 3);
-  const experiences = timeline.filter((e) => e.kind === "experience").length;
   const [lead, ...rest] = featured;
+  const skillNames = skills.flatMap((c) => c.skills.map((s) => s.name)).slice(0, 24);
 
   return (
     <PageTransition>
       {profile && <PersonJsonLd profile={profile} skills={skills} />}
 
-      {/* ─── Hero ─────────────────────────────────────────────── */}
-      <section aria-labelledby="hero-title" className="container-page pt-10 pb-16 sm:pt-16 md:pb-24 lg:pt-24">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-8">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-meta text-subtle">
-              {profile?.location && <span>{profile.location}</span>}
-              {profile?.availability && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-ink">
-                  <span className="relative flex size-2" aria-hidden>
-                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60 motion-reduce:animate-none" />
-                    <span className="relative inline-flex size-2 rounded-full bg-success" />
-                  </span>
-                  {profile.availability}
-                </span>
-              )}
-            </div>
+      {profile ? (
+        <Hero
+          profile={profile}
+          facts={[
+            { label: "Projets publiés", value: projects.length },
+            { label: "Expériences", value: timeline.filter((e) => e.kind === "experience").length },
+            { label: "Langues", value: profile.languages.length },
+            { label: "Domaines", value: skills.length },
+          ]}
+        />
+      ) : (
+        <section className="container-page section-y">
+          <h1 className="font-display text-display">Mourad Saidomar</h1>
+        </section>
+      )}
 
-            <h1 id="hero-title" className="mt-8 font-display text-display">
-              {profile?.fullName ?? "Mourad Saidomar"}
-              <span className="mt-3 block text-h2 text-accent">{profile?.headline ?? "Développeur web"}</span>
-            </h1>
-
-            {profile?.tagline && <p className="mt-8 max-w-[34ch] text-h3 text-ink">{profile.tagline}</p>}
-            {profile?.intro && <p className="mt-5 max-w-[58ch] text-lead text-muted">{profile.intro}</p>}
-
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonLink href="/projets" icon={<ArrowRight className="size-4" />}>
-                Voir les projets
-              </ButtonLink>
-              <ButtonLink href="/contact" variant="secondary">
-                Me contacter
-              </ButtonLink>
-              {profile?.cvUrl && (
-                <ButtonAnchor href="/cv" variant="ghost" icon={<Download className="size-4" />} iconPosition="start">
-                  CV (PDF)
-                </ButtonAnchor>
-              )}
-            </div>
-          </div>
-
-          {profile?.photo && (
-            <figure className="relative mx-auto w-full max-w-sm self-end lg:col-span-4 lg:max-w-none">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-(--radius-lg) bg-sunken">
-                <Image
-                  src={profile.photo.url}
-                  alt={profile.photo.alt}
-                  fill
-                  loading="eager"
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 384px, 100vw"
-                  className="object-cover object-top"
-                />
-              </div>
-              <figcaption className="mt-3 flex justify-between font-mono text-meta text-subtle">
-                <span>{profile.fullName}</span>
-                <span>{profile.location}</span>
-              </figcaption>
-            </figure>
-          )}
-        </div>
-
-        {profile && (
-          <dl className="mt-16 grid grid-cols-2 border-t border-line md:mt-24 md:grid-cols-4">
-            {[
-              { label: "Projets publiés", value: String(projects.length).padStart(2, "0") },
-              { label: "Expériences", value: String(experiences).padStart(2, "0") },
-              { label: "Langues", value: String(profile.languages.length).padStart(2, "0") },
-              { label: "Domaines", value: String(skills.length).padStart(2, "0") },
-            ].map((fact) => (
-              <div key={fact.label} className="border-b border-line py-6 pr-4 md:border-b-0">
-                <dt className="font-mono text-meta text-subtle">{fact.label}</dt>
-                <dd className="mt-2 font-display text-h2">{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
-      </section>
+      <Marquee items={skillNames} />
 
       {/* ─── Projets choisis ─────────────────────────────────── */}
-      <section aria-labelledby="projets-title" className="container-page section-y border-t border-line">
+      <section aria-labelledby="projets-title" className="container-page section-y">
         <SectionHeading
           index="01"
           eyebrow="Projets choisis"
@@ -126,12 +68,12 @@ export default async function HomePage() {
           }
         />
         {lead ? (
-          <div className="mt-14 grid gap-x-8 gap-y-16 md:mt-20 lg:grid-cols-12">
-            <Reveal className="lg:col-span-12">
+          <div className="mt-14 grid gap-x-10 gap-y-20 md:mt-20 lg:grid-cols-12">
+            <Reveal variant="clip" className="lg:col-span-12">
               <ProjectCard project={lead} index={0} size="large" />
             </Reveal>
             {rest.map((project, i) => (
-              <Reveal key={project.id} delay={i * 0.08} className="lg:col-span-6">
+              <Reveal key={project.id} variant="clip" delay={i * 0.12} className={i % 2 === 1 ? "lg:col-span-6 lg:mt-24" : "lg:col-span-6"}>
                 <ProjectCard project={project} index={i + 1} />
               </Reveal>
             ))}
@@ -142,7 +84,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Profil ───────────────────────────────────────────── */}
-      {profile && (
+      {profile && profile.differentiators.length > 0 && (
         <section aria-labelledby="profil-title" className="container-page section-y border-t border-line">
           <SectionHeading
             index="02"
@@ -156,12 +98,16 @@ export default async function HomePage() {
               </Link>
             }
           />
-          <ol className="mt-14 grid gap-px overflow-hidden rounded-(--radius-lg) border border-line bg-line md:mt-20 md:grid-cols-3">
+          <ol className="mt-14 grid gap-4 md:mt-20 md:grid-cols-3">
             {profile.differentiators.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 0.08} className="bg-bg p-8 md:p-10">
-                <span className="font-mono text-meta text-coral">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-6 font-display text-h3">{item.title}</h3>
-                <p className="mt-3 text-muted">{item.description}</p>
+              <Reveal as="li" key={item.title} delay={i * 0.1}>
+                <PointerSurface className="spotlight group h-full overflow-hidden rounded-(--radius-lg) border border-line bg-surface p-8 transition-[border-color,translate] duration-500 ease-(--ease-out) hover:-translate-y-1 hover:border-accent/50 md:p-10">
+                  <span className="font-display text-[4.5rem] leading-none text-coral/90 transition-colors duration-500 group-hover:text-accent">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-10 font-display text-h3">{item.title}</h3>
+                  <p className="mt-3 text-muted">{item.description}</p>
+                </PointerSurface>
               </Reveal>
             ))}
           </ol>
@@ -183,14 +129,29 @@ export default async function HomePage() {
             }
           />
           <ol className="mt-14 border-t border-line md:mt-20">
-            {timeline.slice(0, 4).map((entry) => (
-              <li key={entry.id} className="grid gap-2 border-b border-line py-6 md:grid-cols-12 md:gap-8">
-                <p className="font-mono text-meta text-subtle md:col-span-3 md:pt-1.5">{formatPeriod(entry)}</p>
-                <div className="md:col-span-9">
-                  <h3 className="text-lead font-medium">{entry.title}</h3>
-                  <p className="text-muted">{entry.organization}</p>
-                </div>
-              </li>
+            {timeline.slice(0, 4).map((entry, i) => (
+              <Reveal as="li" key={entry.id} delay={i * 0.06}>
+                <Link
+                  href="/parcours"
+                  className="group relative isolate grid gap-2 overflow-hidden border-b border-line py-7 md:grid-cols-12 md:items-center md:gap-8"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 -z-10 origin-bottom scale-y-0 bg-sunken transition-transform duration-500 ease-(--ease-out) group-hover:scale-y-100"
+                  />
+                  <span className="font-mono text-meta text-subtle transition-transform duration-500 ease-(--ease-out) group-hover:translate-x-3 md:col-span-3">
+                    {formatPeriod(entry)}
+                  </span>
+                  <span className="transition-transform duration-500 ease-(--ease-out) group-hover:translate-x-3 md:col-span-8">
+                    <span className="block font-display text-h3">{entry.title}</span>
+                    <span className="block text-muted">{entry.organization}</span>
+                  </span>
+                  <ArrowUpRight
+                    aria-hidden
+                    className="hidden size-6 -translate-x-3 justify-self-end opacity-0 transition-[opacity,translate] duration-500 ease-(--ease-out) group-hover:translate-x-0 group-hover:opacity-100 md:col-span-1 md:block"
+                  />
+                </Link>
+              </Reveal>
             ))}
           </ol>
         </section>

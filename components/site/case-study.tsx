@@ -7,6 +7,7 @@ import { ButtonAnchor } from "@/components/ui/button";
 import { TagList } from "@/components/ui/tag";
 import { isRichTextEmpty } from "@/lib/rich-text";
 import type { Project, ProjectSummary } from "@/lib/types";
+import { MaskWords } from "./mask-words";
 import { ProjectCover } from "./project-cover";
 import { RichText } from "./rich-text";
 
@@ -42,7 +43,9 @@ export function CaseStudy({ project, next }: Props) {
         <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-8">
             {project.period && <p className="font-mono text-meta text-subtle">{project.period}</p>}
-            <h1 className="mt-4 font-display text-display">{project.title}</h1>
+            <h1 className="mt-4 font-display text-display">
+              <MaskWords text={project.title} delay={80} />
+            </h1>
             {project.summary && <p className="mt-6 max-w-[48ch] text-h3 text-muted">{project.summary}</p>}
           </div>
 

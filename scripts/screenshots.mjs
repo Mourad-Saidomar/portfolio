@@ -11,7 +11,11 @@ const variants = [
 
 const browser = await chromium.launch();
 for (const v of variants) {
-  const page = await browser.newPage({ viewport: v.viewport, colorScheme: v.scheme, reducedMotion: "reduce" });
+  const page = await browser.newPage({
+    viewport: v.viewport,
+    colorScheme: v.scheme,
+    reducedMotion: process.env.MOTION ? "no-preference" : "reduce",
+  });
   for (const path of paths) {
     await page.goto(base + path, { waitUntil: "networkidle" });
     // Défilement progressif pour déclencher les apparitions au scroll.
@@ -22,7 +26,7 @@ for (const v of variants) {
       }
       window.scrollTo(0, 0);
     });
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(process.env.MOTION ? 2500 : 700);
     const file = `${out}/${v.name}${path.replace(/\//g, "_") || "_home"}.png`;
     await page.screenshot({ path: file, fullPage: true });
     console.log(file);

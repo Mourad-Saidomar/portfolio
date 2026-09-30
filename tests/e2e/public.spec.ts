@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 
 const PAGES = [
   { path: "/", heading: /Mourad Saidomar/ },
@@ -10,10 +10,23 @@ const PAGES = [
   { path: "/contact", heading: /Parlons/ },
 ];
 
+/** Attend la fin des animations d'entrée (hors boucles et animations pilotées par le défilement). */
+async function settleAnimations(page: Page) {
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.timeline instanceof DocumentTimeline && a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+}
+
 test.describe("visite du site", () => {
   for (const { path, heading } of PAGES) {
     test(`${path} : rendu, titre unique et accessibilité (axe WCAG 2.2 AA)`, async ({ page }) => {
       await page.goto(path);
+      await settleAnimations(page);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
       await expect(page).toHaveTitle(/Mourad Saidomar/);
@@ -105,6 +118,34 @@ test.describe("parcours visiteur", () => {
     await page.goto("/projets/projet-inexistant");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("n'existe pas");
     await expect(page.locator('meta[name="robots"][content*="noindex"]').first()).toBeAttached();
+  });
+});
+
+test.describe("animations", () => {
+  test("peuvent être mises en pause, et le choix est mémorisé (WCAG 2.2.2)", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await page.getByRole("button", { name: "Mettre en pause les animations" }).first().click();
+    await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+    await expect(page.getByRole("button", { name: "Relancer les animations" }).first()).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  test("mouvement réduit : aucune animation, contenu visible d'emblée", async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const running = await page.evaluate(
+      () => document.getAnimations().filter((a) => a.playState === "running").length,
+    );
+    expect(running).toBe(0);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await context.close();
   });
 });
 

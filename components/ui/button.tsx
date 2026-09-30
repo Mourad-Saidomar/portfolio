@@ -11,13 +11,13 @@ const base =
   "active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-accent text-on-accent hover:bg-accent-hover",
+  primary: "shine bg-accent text-on-accent hover:bg-accent-hover",
   secondary: "border border-ink/80 text-ink hover:bg-ink hover:text-bg",
   ghost: "text-ink hover:bg-sunken",
   danger: "border border-danger/60 text-danger hover:bg-danger hover:text-bg",
-  /** Sur fond encre (bandeaux sombres). */
-  inverse: "bg-bg text-ink hover:bg-accent hover:text-on-accent",
-  "inverse-outline": "border border-bg/40 text-bg hover:bg-bg hover:text-ink",
+  /** Sur fond toujours sombre (bandeau de contact), quel que soit le thème. */
+  inverse: "shine bg-[#f5f2ec] text-[#15181b] hover:bg-[#5fcfc6] hover:text-[#062624]",
+  "inverse-outline": "border border-[#f5f2ec]/40 text-[#f5f2ec] hover:bg-[#f5f2ec] hover:text-[#15181b]",
 };
 
 const sizes: Record<Size, string> = {

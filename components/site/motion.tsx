@@ -22,7 +22,22 @@ type RevealProps = {
   delay?: number;
   className?: string;
   as?: "div" | "li";
+  /** « up » : fondu + montée ; « clip » : rideau qui se lève (images, cartes). */
+  variant?: "up" | "clip";
 };
+
+const VARIANTS = {
+  up: {
+    hidden: { opacity: 0, transform: "translateY(12px)" },
+    visible: { opacity: 1, transform: "translateY(0px)" },
+    duration: 0.5,
+  },
+  clip: {
+    hidden: { clipPath: "inset(18% 0% 0% 0% round 20px)", opacity: 0.001, transform: "translateY(40px)" },
+    visible: { clipPath: "inset(0% 0% 0% 0% round 20px)", opacity: 1, transform: "translateY(0px)" },
+    duration: 0.9,
+  },
+} as const;
 
 /**
  * Apparition discrète au scroll (opacité + 12 px, une seule fois).
@@ -30,7 +45,7 @@ type RevealProps = {
  * ce qui est encore sous la ligne de flottaison, puis le révèle à l'entrée dans l'écran.
  * Sans JavaScript ou en mouvement réduit, rien n'est jamais caché.
  */
-export function Reveal({ children, delay = 0, className, as = "div" }: RevealProps) {
+export function Reveal({ children, delay = 0, className, as = "div", variant = "up" }: RevealProps) {
   // Le type de balise ne change que la sémantique (div ou li) : même API DOM.
   const Tag = as as "div";
   const [scope, animate] = useAnimate<HTMLDivElement>();
@@ -39,17 +54,18 @@ export function Reveal({ children, delay = 0, className, as = "div" }: RevealPro
     const el = scope.current;
     if (!el || prefersReducedMotion() || el.getBoundingClientRect().top < window.innerHeight) return;
 
-    animate(el, { opacity: 0, transform: "translateY(12px)" }, { duration: 0 });
+    const { hidden, visible, duration } = VARIANTS[variant];
+    animate(el, hidden, { duration: 0 });
     const stop = inView(
       el,
       () => {
-        animate(el, { opacity: 1, transform: "translateY(0px)" }, { duration: 0.5, delay, ease: EASE_OUT });
+        animate(el, visible, { duration, delay, ease: EASE_OUT });
         stop();
       },
       { margin: "0px 0px -8% 0px" },
     );
     return stop;
-  }, [animate, delay, scope]);
+  }, [animate, delay, scope, variant]);
 
   return (
     <Tag ref={scope} className={className}>

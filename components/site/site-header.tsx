@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { SiteNav } from "./site-nav";
 
+/**
+ * En-tête collant : transparent en haut de page, il se densifie au défilement
+ * et porte une fine barre de progression de lecture (CSS piloté par le scroll).
+ */
 export function SiteHeader() {
   return (
     <header
       style={{ viewTransitionName: "site-header" }}
-      className="sticky top-0 z-50 h-(--header-h) border-b border-line/70 bg-bg/85 backdrop-blur-md"
+      className="header-scroll sticky top-0 z-50 h-(--header-h) border-b border-line/70 bg-bg/85 backdrop-blur-md"
     >
       <div className="container-page flex h-full items-center justify-between gap-4">
         <Link href="/" className="group flex items-baseline gap-2" aria-label="Mourad Saidomar — accueil">
@@ -17,6 +21,7 @@ export function SiteHeader() {
         </Link>
         <SiteNav />
       </div>
+      <span aria-hidden className="scroll-progress absolute inset-x-0 -bottom-px h-0.5 bg-accent" />
     </header>
   );
 }
