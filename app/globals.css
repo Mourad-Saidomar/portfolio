@@ -7,6 +7,7 @@
 
 :root {
   color-scheme: light;
+  --header-h: 4.25rem;
   --bg: #f5f2ec;
   --surface: #fbfaf7;
   --sunken: #ece7df;

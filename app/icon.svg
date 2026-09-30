@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .bg { fill: #15181b; }
+    .fg { fill: #f5f2ec; }
+    @media (prefers-color-scheme: dark) { .bg { fill: #f5f2ec; } .fg { fill: #15181b; } }
+  </style>
+  <rect class="bg" width="64" height="64" rx="14"/>
+  <path class="fg" d="M14 46V18h5.2l12.8 17.4L44.8 18H50v28h-5.4V28.6L33.4 43.8h-2.8L19.4 28.6V46z"/>
+  <circle cx="53" cy="46" r="3.4" fill="#e0643a"/>
+</svg>
