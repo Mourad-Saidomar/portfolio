@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { buttonClasses } from "@/components/ui/button";
 import { NAV_LINKS, isActive } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
@@ -88,7 +89,7 @@ export function SiteNav() {
           type="button"
           className="inline-flex size-11 items-center justify-center rounded-full text-ink hover:bg-sunken md:hidden"
           aria-expanded={open}
-          aria-controls={panelId}
+          aria-controls={open ? panelId : undefined}
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
@@ -96,32 +97,41 @@ export function SiteNav() {
         </button>
       </div>
 
-      <div
-        id={panelId}
-        hidden={!open}
-        className="fixed inset-x-0 top-(--header-h) bottom-0 z-40 overflow-y-auto bg-bg md:hidden"
-      >
-        <nav aria-label="Navigation mobile" className="container-page flex min-h-full flex-col pt-6 pb-10">
-          <ul className="border-t border-line">
-            {MOBILE_LINKS.map((link, index) => (
-              <li key={link.href} className="border-b border-line">
-                <Link
-                  href={link.href}
-                  aria-current={isActive(pathname, link.href) ? "page" : undefined}
-                  className="flex items-baseline justify-between py-4 font-display text-[2.25rem] leading-tight aria-[current=page]:text-accent"
-                >
-                  {link.label}
-                  <span className="font-mono text-meta text-subtle">{String(index + 1).padStart(2, "0")}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8 flex items-center justify-between rounded-full border border-line bg-surface py-1 pr-1 pl-5">
-            <span className="text-muted">Thème</span>
-            <ThemeToggle />
-          </div>
-        </nav>
-      </div>
+      {/* Portail : le backdrop-filter du header confinerait un enfant « fixed » à la hauteur du header. */}
+      {open &&
+        createPortal(
+          <div
+            id={panelId}
+            className="fixed inset-x-0 top-(--header-h) bottom-0 z-40 overflow-y-auto bg-bg md:hidden"
+          >
+            <nav
+              aria-label="Navigation mobile"
+              className="container-page flex min-h-full flex-col pt-6 pb-10"
+            >
+              <ul className="border-t border-line">
+                {MOBILE_LINKS.map((link, index) => (
+                  <li key={link.href} className="border-b border-line">
+                    <Link
+                      href={link.href}
+                      aria-current={isActive(pathname, link.href) ? "page" : undefined}
+                      className="flex items-baseline justify-between py-4 font-display text-[2.25rem] leading-tight aria-[current=page]:text-accent"
+                    >
+                      {link.label}
+                      <span className="font-mono text-meta text-subtle">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex items-center justify-between rounded-full border border-line bg-surface py-1 pr-1 pl-5">
+                <span className="text-muted">Thème</span>
+                <ThemeToggle />
+              </div>
+            </nav>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

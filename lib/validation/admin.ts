@@ -30,7 +30,8 @@ const storagePath = z
   .string()
   .trim()
   .max(300)
-  .regex(/^[a-zA-Z0-9/_.-]+$/, "Chemin de fichier invalide.");
+  .regex(/^[a-zA-Z0-9/_.-]+$/, "Chemin de fichier invalide.")
+  .refine((p) => !p.startsWith("/") && !p.split("/").includes(".."), "Chemin de fichier invalide.");
 
 export const slugSchema = z
   .string()
