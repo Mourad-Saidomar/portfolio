@@ -88,6 +88,11 @@ export async function SiteFooter() {
             © {name} — conçu et développé avec Next.js et Supabase ·{" "}
             <Link href="/mentions-legales" className="link-underline hover:text-ink">
               Mentions légales et confidentialité
+            </Link>{" "}
+            ·{" "}
+            {/* Accès admin : redirige vers la connexion si la session n'est pas ouverte. */}
+            <Link href="/admin" prefetch={false} rel="nofollow" className="link-underline hover:text-ink">
+              Espace admin
             </Link>
           </p>
           <MotionToggle />

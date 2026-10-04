@@ -153,8 +153,8 @@ Pistes : tuteurs de stage (DGFiP de Mayotte, mairie de Mamoudzou), formateurs Al
 
 ## 9. Mentions légales et confidentialité
 
-Page `/mentions-legales` (lien dans le pied de page), rédigée d'après le fonctionnement réel du site. À compléter dans `app/(site)/mentions-legales/page.tsx` :
+Page `/mentions-legales` (lien dans le pied de page), rédigée d'après le fonctionnement réel du site.
 
-- **Adresse de l'hébergeur** (Vercel Inc.) : **À COMPLÉTER** au déploiement.
-- **Région d'hébergement Supabase** (Project Settings → General) : **À COMPLÉTER**.
-- **Durée de conservation des messages de contact** : **À COMPLÉTER** (ex. 12 mois, puis suppression depuis l'admin).
+- Hébergeur : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (**à vérifier** sur vercel.com/legal).
+- Données : Supabase Inc. (région non indiquée : ajoutez-la si souhaité, Project Settings → General).
+- Conservation des messages de contact : 12 mois, puis suppression depuis l'admin.

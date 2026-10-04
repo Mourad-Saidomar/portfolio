@@ -11,12 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/mentions-legales" },
 };
 
-/*
- * Rédigé à partir du fonctionnement réel du site (formulaire de contact, stockage local, admin).
- * Les informations inconnues à ce jour sont marquées « À COMPLÉTER » : voir CONTENT.md.
- */
-
-const TODO = "À COMPLÉTER";
+/* Rédigé à partir du fonctionnement réel du site (formulaire de contact, stockage local, admin). */
 
 function Block({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
@@ -54,12 +49,12 @@ export default async function LegalPage() {
 
           <Block id="hebergement" title="Hébergement">
             <p>
-              Site : Vercel Inc. (<a href="https://vercel.com">vercel.com</a>) — adresse : {TODO} (à confirmer au
-              déploiement).
+              Site : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (
+              <a href="https://vercel.com">vercel.com</a>).
             </p>
             <p>
               Données et fichiers (base de données, images, CV) : Supabase Inc. (
-              <a href="https://supabase.com">supabase.com</a>) — région d&apos;hébergement : {TODO}.
+              <a href="https://supabase.com">supabase.com</a>).
             </p>
           </Block>
 
@@ -77,7 +72,7 @@ export default async function LegalPage() {
               commerciales. Seul l&apos;éditeur y a accès ; les prestataires d&apos;hébergement ci-dessus les stockent
               pour son compte.
             </p>
-            <p>Durée de conservation : {TODO}.</p>
+            <p>Durée de conservation : 12 mois après réception du message, puis suppression.</p>
             <p>
               Vous pouvez demander l&apos;accès, la rectification ou la suppression de vos données à tout moment
               {email ? (
