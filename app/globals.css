@@ -2,84 +2,37 @@
 
 /*
  * Design tokens — source unique (voir DESIGN.md).
- * Le thème suit le système par défaut ; `data-theme` sur <html> force clair ou sombre.
+ * Direction « Éditorial nuit » : un seul thème, sombre.
  */
 
 :root {
-  color-scheme: light;
-  --header-h: 4.25rem;
-  --bg: #f5f2ec;
-  --surface: #fbfaf7;
-  --sunken: #ece7df;
-  --ink: #15181b;
-  --muted: #565c63;
-  --subtle: #5f656c;
-  --line: #d9d2c7;
-  --field: #8a857c;
-  --accent: #0a6664;
-  --accent-hover: #084f4e;
-  --on-accent: #ffffff;
-  --accent-soft: color-mix(in oklab, var(--accent) 10%, transparent);
-  --coral: #a8421e;
-  --danger: #b42318;
-  --success: #1e7a3e;
-  --shadow-lift: 0 1px 2px rgb(21 24 27 / 0.04), 0 12px 32px -12px rgb(21 24 27 / 0.18);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #0e1113;
-    --surface: #151a1d;
-    --sunken: #0a0c0e;
-    --ink: #ede9e2;
-    --muted: #a2a8ae;
-    --subtle: #8c9298;
-    --line: #272d32;
-    --field: #6a7279;
-    --accent: #5fcfc6;
-    --accent-hover: #8be0d9;
-    --on-accent: #062624;
-    --coral: #f08a62;
-    --danger: #f97066;
-    --success: #5bd38a;
-    --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
-  }
-}
-
-:root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0e1113;
-  --surface: #151a1d;
-  --sunken: #0a0c0e;
-  --ink: #ede9e2;
-  --muted: #a2a8ae;
-  --subtle: #8c9298;
-  --line: #272d32;
-  --field: #6a7279;
-  --accent: #5fcfc6;
-  --accent-hover: #8be0d9;
-  --on-accent: #062624;
-  --coral: #f08a62;
+  --header-h: 4.25rem;
+  --bg: #0a0c0d;
+  /* Fond du hero : l'en-tête prend cette couleur en haut de page pour s'y fondre. */
+  --hero-bg: var(--bg);
+  --surface: #111517;
+  --raised: #171c1f;
+  --sunken: #060808;
+  --ink: #eef1f0;
+  --muted: #a3acaa;
+  --subtle: #8a9492;
+  --line: #222a2d;
+  --field: #5f6a6d;
+  --accent: #5ee0d0;
+  --accent-hover: #93efe4;
+  --on-accent: #03201d;
+  --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+  --warning: #f5b85b;
   --danger: #f97066;
   --success: #5bd38a;
   --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
 }
 
-@custom-variant dark {
-  :root[data-theme="dark"] & {
-    @slot;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) & {
-      @slot;
-    }
-  }
-}
-
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-raised: var(--raised);
   --color-sunken: var(--sunken);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
@@ -90,11 +43,11 @@
   --color-accent-hover: var(--accent-hover);
   --color-on-accent: var(--on-accent);
   --color-accent-soft: var(--accent-soft);
-  --color-coral: var(--coral);
+  --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-success: var(--success);
 
-  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 
@@ -102,17 +55,18 @@
 }
 
 @theme {
-  --text-display: clamp(3rem, 1.6rem + 6.2vw, 7.5rem);
-  --text-display--line-height: 0.95;
-  --text-display--letter-spacing: -0.02em;
-  --text-h1: clamp(2.5rem, 1.7rem + 3.6vw, 5rem);
-  --text-h1--line-height: 1;
-  --text-h1--letter-spacing: -0.015em;
-  --text-h2: clamp(2rem, 1.5rem + 2.2vw, 3.5rem);
-  --text-h2--line-height: 1.05;
-  --text-h2--letter-spacing: -0.01em;
+  /* Anton (condensée, très grasse) : interlignage serré, pas d'approche négative. */
+  --text-display: clamp(3.25rem, 1.6rem + 7vw, 8.5rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: 0;
+  --text-h1: clamp(2.75rem, 1.6rem + 4.6vw, 6rem);
+  --text-h1--line-height: 0.92;
+  --text-h1--letter-spacing: 0;
+  --text-h2: clamp(2.25rem, 1.5rem + 3vw, 4.25rem);
+  --text-h2--line-height: 1.02;
+  --text-h2--letter-spacing: 0.005em;
   --text-h3: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
-  --text-h3--line-height: 1.2;
+  --text-h3--line-height: 1.15;
   --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
   --text-lead--line-height: 1.5;
   --text-meta: 0.8125rem;
@@ -170,6 +124,11 @@
   h2,
   h3 {
     text-wrap: balance;
+  }
+
+  /* Icônes Lucide : une seule épaisseur de trait sur tout le site. */
+  svg.lucide {
+    stroke-width: 1.75;
   }
 
   p {
@@ -250,7 +209,7 @@
     top: 0.72em;
     width: 0.45rem;
     height: 1px;
-    background: var(--coral);
+    background: color-mix(in oklab, var(--accent) 60%, transparent);
   }
   .prose-case ol {
     list-style: decimal;
@@ -272,8 +231,8 @@
   .prose-case blockquote {
     border-left: 2px solid var(--accent);
     padding-left: 1rem;
-    font-family: var(--font-display);
     font-size: 1.375rem;
+    font-weight: 500;
     line-height: 1.35;
   }
   .prose-case code {
@@ -353,11 +312,6 @@
     transform: translate3d(10%, -8%, 0) scale(0.94);
   }
 }
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 @keyframes aurora {
   to {
     background-position:
@@ -379,11 +333,56 @@
     transform: scaleY(0);
   }
 }
-@keyframes header-settle {
+/* Entrée du hero (≈ 1 s) : titre → portrait → frappe → icônes → carte. */
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(40%) scaleY(0.7);
+    filter: blur(12px);
+  }
+}
+@keyframes hero-photo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8%) scale(1.05);
+  }
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+/* Mouvement réduit : la même séquence, en fondus seuls. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Défilement (parallaxe) : le titre va moins vite que le portrait, qui monte en rétrécissant ;
+   tout s'estompe progressivement vers la carte du projet phare. */
+@keyframes hero-photo-scroll {
   to {
-    background-color: color-mix(in oklab, var(--bg) 92%, transparent);
-    border-color: var(--line);
-    box-shadow: 0 10px 30px -24px rgb(0 0 0 / 0.5);
+    transform: translateY(-10%) scale(0.94);
+    opacity: 0.35;
+  }
+}
+@keyframes hero-word-scroll {
+  to {
+    transform: translateY(16%);
+    opacity: 0;
+  }
+}
+@keyframes hero-fg-scroll {
+  to {
+    transform: translateY(-2.5rem);
+    opacity: 0;
+  }
+}
+/* Squelettes de chargement. */
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
   }
 }
 @keyframes progress {
@@ -402,12 +401,13 @@
     animation: slide-up-soft 0.9s var(--ease-out) var(--d, 0ms) both;
   }
   /* Ligne de texte qui monte depuis un masque : <span class="mask-line"><span>…</span></span>. */
+  /* Marges internes : les accents des capitales (É, À…) dépassent la hauteur de ligne serrée. */
   .mask-line {
     display: inline-block;
     overflow: hidden;
     vertical-align: top;
-    padding-bottom: 0.08em;
-    margin-bottom: -0.08em;
+    padding-block: 0.14em 0.08em;
+    margin-block: -0.14em -0.08em;
   }
   .mask-line > span {
     display: inline-block;
@@ -435,14 +435,103 @@
     background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 26%, transparent), transparent);
     animation: drift-a 18s ease-in-out infinite alternate;
   }
-  .glow-coral {
-    background: radial-gradient(closest-side, color-mix(in oklab, var(--coral) 18%, transparent), transparent);
+  .glow-deep {
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 12%, transparent), transparent);
     animation: drift-b 22s ease-in-out infinite alternate;
   }
-  .dot-grid {
-    background-image: radial-gradient(color-mix(in oklab, var(--ink) 16%, transparent) 1px, transparent 1.2px);
-    background-size: 26px 26px;
-    mask-image: radial-gradient(ellipse 60% 70% at 70% 35%, black, transparent 75%);
+  /* Grille fine d'atelier (papier millimétré), estompée vers les bords. */
+  .line-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 65% at 60% 30%, black, transparent 78%);
+  }
+
+  /* Mot mis en valeur dans un titre éditorial : pastille lagon (reste lisible si la ligne se coupe). */
+  .pill {
+    border-radius: 9999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 0 0.32em 0.04em;
+    margin-inline: -0.04em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+
+  /* Mot de fond du hero, étiré verticalement (affiche). */
+  .hero-backdrop {
+    transform: scaleY(1.7);
+    transform-origin: center;
+  }
+
+
+  /* Entrée du hero au chargement (CSS pur, délai --d) : rien n'attend le JavaScript. */
+  .letter-in {
+    display: inline-block;
+    animation: letter-in 0.6s var(--ease-out) var(--d, 0ms) both;
+  }
+  .hero-photo-in {
+    animation: hero-photo-in 0.75s var(--ease-out) var(--d, 0ms) both;
+  }
+  .hero-in {
+    animation: hero-in 0.5s var(--ease-out) var(--d, 0ms) both;
+  }
+  .hero-glow-in {
+    animation: fade-in 1s ease-out var(--d, 0ms) both;
+  }
+
+  /* Squelette de chargement : bloc neutre + reflet discret (coupé en mouvement réduit). */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background-color: color-mix(in oklab, var(--ink) 7%, transparent);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--ink) 7%, transparent), transparent);
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  /* Contenu qui remplace un squelette : apparition en fondu (opacité seule). */
+  .data-in {
+    animation: fade-in 0.35s ease-out both;
+  }
+
+  /* En-tête : se fond dans le hero en haut de page, reprend son style après ~50 px (data-scrolled). */
+  .site-header {
+    background-color: var(--hero-bg);
+    border-color: transparent;
+    transition:
+      background-color 300ms var(--ease-out),
+      border-color 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out),
+      backdrop-filter 300ms var(--ease-out);
+  }
+  :root[data-scrolled] .site-header {
+    background-color: color-mix(in oklab, var(--bg) 85%, transparent);
+    border-color: color-mix(in oklab, var(--line) 70%, transparent);
+    box-shadow: 0 10px 30px -24px rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Titres du hero : halo lumineux, comme rétroéclairés (affiche de film). */
+  .hero-name {
+    color: #fff;
+    text-shadow:
+      0 0 14px rgb(255 255 255 / 0.45),
+      0 0 42px rgb(255 255 255 / 0.18),
+      0 0 90px color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+
+  /* Texte au contour seul (signatures décoratives) ; --outline règle l'intensité du trait. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklab, var(--ink) var(--outline, 30%), transparent);
   }
 
   /* Bandeau défilant. */
@@ -455,16 +544,12 @@
     animation-play-state: paused;
   }
 
-  .spin-slow {
-    animation: spin 24s linear infinite;
-  }
-
-  /* Bandeau de contact : aurore en mouvement lent. */
+  /* Bandeau de contact : aurore lagon en mouvement lent. */
   .aurora {
     background-image:
-      radial-gradient(55% 75% at 0% 50%, rgb(95 207 198 / 0.34), transparent 70%),
-      radial-gradient(45% 65% at 100% 50%, rgb(240 138 98 / 0.26), transparent 70%),
-      radial-gradient(40% 60% at 50% 0%, rgb(95 207 198 / 0.18), transparent 70%);
+      radial-gradient(55% 75% at 0% 50%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 70%),
+      radial-gradient(45% 65% at 100% 50%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 70%),
+      radial-gradient(40% 60% at 50% 0%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%);
     background-size: 200% 200%;
     background-position:
       0% 50%,
@@ -553,13 +638,6 @@ body::after {
 
 /* Effets liés au défilement : uniquement si le navigateur les prend en charge. */
 @supports (animation-timeline: view()) {
-  .scroll-progress {
-    display: block;
-  }
-  .header-scroll {
-    background-color: color-mix(in oklab, var(--bg) 55%, transparent);
-    border-color: transparent;
-  }
   @media (prefers-reduced-motion: no-preference) {
     .parallax-img {
       animation: parallax-y linear both;
@@ -571,12 +649,32 @@ body::after {
       animation-timeline: view();
       animation-range: entry 20% cover 70%;
     }
-    .header-scroll {
-      animation: header-settle linear both;
+    /* Hero : animations liées au défilement de la page (première hauteur d'écran). */
+    .hero-photo-scroll,
+    .hero-word-scroll,
+    .hero-fg-scroll {
+      /* Propriétés détaillées : un raccourci « animation » sans nom serait écarté à la compilation. */
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: scroll(root);
-      animation-range: 0 140px;
     }
+    .hero-photo-scroll {
+      transform-origin: 50% 100%;
+      animation-name: hero-photo-scroll;
+      animation-range: 0 100vh;
+    }
+    .hero-word-scroll {
+      animation-name: hero-word-scroll;
+      animation-range: 0 80vh;
+    }
+    .hero-fg-scroll {
+      animation-name: hero-fg-scroll;
+      animation-range: 0 40vh;
+    }
+    /* Sans animation (mouvement réduit), la barre resterait pleine : elle n'est affichée qu'ici. */
     .scroll-progress {
+      display: block;
       transform-origin: left;
       animation: progress linear both;
       animation-timeline: scroll(root);
@@ -586,7 +684,8 @@ body::after {
 
 /* Pause globale des animations ambiantes (bouton « Animations »). */
 :root[data-motion="paused"] .ambient,
-:root[data-motion="paused"] .ambient * {
+:root[data-motion="paused"] .ambient *,
+:root[data-motion="paused"] .skeleton::after {
   animation-play-state: paused !important;
 }
 
@@ -599,10 +698,19 @@ body::after {
   .curtain img,
   .glow,
   .marquee-track,
-  .spin-slow,
   .aurora,
   .ambient {
     animation: none !important;
+  }
+  .letter-in,
+  .hero-photo-in,
+  .hero-in {
+    animation-name: fade-in !important;
+    animation-duration: 0.45s !important;
+    filter: none;
+  }
+  .skeleton::after {
+    display: none;
   }
   .marquee-dup {
     display: none;

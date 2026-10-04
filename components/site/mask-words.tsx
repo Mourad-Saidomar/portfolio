@@ -6,7 +6,8 @@ import { type CSSProperties, Fragment } from "react";
  * normalement par les technologies d'assistance et indexés sans doublon.
  */
 export function MaskWords({ text, delay = 0, stagger = 60 }: { text: string; delay?: number; stagger?: number }) {
-  const words = text.split(/\s+/).filter(Boolean);
+  // Les espaces insécables (« code : ») restent dans le mot : pas de ponctuation orpheline.
+  const words = text.split(/[^\S  ]+/).filter(Boolean);
   return words.map((word, i) => (
     <Fragment key={`${word}-${i}`}>
       <span className="mask-line">

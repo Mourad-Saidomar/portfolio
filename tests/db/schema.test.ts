@@ -19,6 +19,9 @@ beforeAll(async () => {
   // Un brouillon, pour vérifier qu'il reste invisible du public.
   await insertRows(db, "projects", [{ id: DRAFT_ID, slug: "brouillon", title: "Brouillon", status: "draft" }]);
   await insertRows(db, "project_images", [{ project_id: DRAFT_ID, path: "draft.webp" }]);
+  await insertRows(db, "testimonials", rows.testimonials);
+  // Un avis masqué, pour vérifier qu'il reste invisible du public.
+  await insertRows(db, "testimonials", [{ quote: "Avis en réserve", author_name: "Masqué", published: false }]);
   await insertRows(db, "messages", [{ name: "Ada", email: "ada@example.com", message: "Bonjour" }]);
 }, 60_000);
 
@@ -65,6 +68,18 @@ describe("RLS — visiteur anonyme", () => {
       (await tx.query<{ n: number }>("select count(*)::int n from public.timeline_entries")).rows[0]?.n,
     );
     expect(n).toBe(9);
+  });
+
+  it("ne voit que les avis publiés et ne peut pas en ajouter", async () => {
+    const authors = await as(db, "anon", async (tx) =>
+      (await tx.query<{ author_name: string }>("select author_name from public.testimonials")).rows.map((r) => r.author_name),
+    );
+    expect(authors).toHaveLength(3);
+    expect(authors).not.toContain("Masqué");
+    const error = await as(db, "anon", (tx) =>
+      sqlError(() => tx.query("insert into public.testimonials (quote, author_name) values ('Faux', 'Pirate')")),
+    );
+    expect(error).toMatch(/row-level security/);
   });
 
   it("ne peut ni lire ni écrire les messages", async () => {
@@ -149,6 +164,20 @@ describe("RLS — administrateur", () => {
     expect(refused).toMatch(/row-level security/);
   });
 
+  it("peut modifier et réordonner les avis", async () => {
+    const { expected, actual, quote } = await as(db, "admin", async (tx) => {
+      const ids = (await tx.query<{ id: string }>("select id from public.testimonials order by position desc")).rows.map(
+        (r) => r.id,
+      );
+      await tx.query("select public.reorder_rows('testimonials', $1::uuid[])", [ids]);
+      await tx.query("update public.testimonials set quote = 'Rigoureux et fiable.' where id = $1", [ids[0]]);
+      const after = (await tx.query<{ id: string; quote: string }>("select id, quote from public.testimonials order by position")).rows;
+      return { expected: ids, actual: after.map((r) => r.id), quote: after[0]?.quote };
+    });
+    expect(actual).toEqual(expected);
+    expect(quote).toBe("Rigoureux et fiable.");
+  });
+
   it("refuse une table non autorisée au réordonnancement", async () => {
     const error = await as(db, "admin", (tx) =>
       sqlError(() => tx.query("select public.reorder_rows('admins', array[]::uuid[])")),
@@ -174,6 +203,15 @@ describe("contraintes", () => {
       ),
     );
     expect(error).toMatch(/timeline_dates_order/);
+  });
+
+  it("refuse un avis vide ou trop long", async () => {
+    for (const quote of ["", "x".repeat(601)]) {
+      const error = await as(db, "admin", (tx) =>
+        sqlError(() => tx.query("insert into public.testimonials (quote, author_name) values ($1, 'X')", [quote])),
+      );
+      expect(error).toMatch(/testimonials_quote_length/);
+    }
   });
 
   it("n'accepte qu'une seule ligne de profil", async () => {

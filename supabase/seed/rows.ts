@@ -1,5 +1,5 @@
 import type { TablesInsert } from "../../lib/supabase/database.types";
-import { profile, projects, skillCategories, timeline } from "./content";
+import { profile, projects, skillCategories, testimonials, timeline } from "./content";
 
 export type SeedRows = {
   profile: TablesInsert<"profile">;
@@ -8,6 +8,7 @@ export type SeedRows = {
   skills: (TablesInsert<"skills"> & { id: string })[];
   projects: (TablesInsert<"projects"> & { id: string })[];
   projectImages: (TablesInsert<"project_images"> & { id: string })[];
+  testimonials: (TablesInsert<"testimonials"> & { id: string })[];
 };
 
 /** Identifiant d’enfant dérivé du parent : unique pour chaque couple (parent, index). */
@@ -41,5 +42,6 @@ export function buildSeedRows(): SeedRows {
     skills,
     projects: projects.map(({ images: _images, ...project }) => project),
     projectImages,
+    testimonials,
   };
 }

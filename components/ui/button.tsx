@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger" | "inverse" | "inverse-outline";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "md" | "sm";
 
 const base =
@@ -15,9 +15,6 @@ const variants: Record<Variant, string> = {
   secondary: "border border-ink/80 text-ink hover:bg-ink hover:text-bg",
   ghost: "text-ink hover:bg-sunken",
   danger: "border border-danger/60 text-danger hover:bg-danger hover:text-bg",
-  /** Sur fond toujours sombre (bandeau de contact), quel que soit le thème. */
-  inverse: "shine bg-[#f5f2ec] text-[#15181b] hover:bg-[#5fcfc6] hover:text-[#062624]",
-  "inverse-outline": "border border-[#f5f2ec]/40 text-[#f5f2ec] hover:bg-[#f5f2ec] hover:text-[#15181b]",
 };
 
 const sizes: Record<Size, string> = {

@@ -4,5 +4,6 @@ export const TAGS = {
   timeline: "timeline",
   skills: "skills",
   projects: "projects",
+  testimonials: "testimonials",
   project: (slug: string) => `project:${slug}`,
 } as const;

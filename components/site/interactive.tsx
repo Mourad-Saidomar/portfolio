@@ -115,7 +115,8 @@ export function CountUp({ value, pad = 2, duration = 1400 }: { value: number; pa
  */
 export function RevealWords({ text, className, stagger = 0.06 }: { text: string; className?: string; stagger?: number }) {
   const [scope, animate] = useAnimate<HTMLSpanElement>();
-  const words = text.split(/\s+/).filter(Boolean);
+  // Les espaces insécables (« question ? ») restent dans le mot : pas de ponctuation orpheline.
+  const words = text.split(/[^\S  ]+/).filter(Boolean);
 
   useEffect(() => {
     const el = scope.current;
@@ -139,7 +140,7 @@ export function RevealWords({ text, className, stagger = 0.06 }: { text: string;
     <span ref={scope} className={className}>
       {words.map((word, i) => (
         <Fragment key={`${word}-${i}`}>
-          <span className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-top">
+          <span className="-mt-[0.14em] -mb-[0.08em] inline-block overflow-hidden pt-[0.14em] pb-[0.08em] align-top">
             <span data-word className="inline-block">
               {word}
             </span>

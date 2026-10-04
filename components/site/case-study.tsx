@@ -43,7 +43,7 @@ export function CaseStudy({ project, next }: Props) {
         <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-8">
             {project.period && <p className="font-mono text-meta text-subtle">{project.period}</p>}
-            <h1 className="mt-4 font-display text-display">
+            <h1 className="mt-4 font-display uppercase text-display">
               <MaskWords text={project.title} delay={80} />
             </h1>
             {project.summary && <p className="mt-6 max-w-[48ch] text-h3 text-muted">{project.summary}</p>}
@@ -109,8 +109,8 @@ export function CaseStudy({ project, next }: Props) {
             >
               <div className="md:col-span-4">
                 <div className="md:sticky md:top-[calc(var(--header-h)+2rem)]">
-                  <p className="font-mono text-meta text-coral">{String(i + 1).padStart(2, "0")}</p>
-                  <h2 id={`section-${section.key}`} className="mt-2 font-display text-h2">
+                  <p className="font-mono text-meta text-accent">{String(i + 1).padStart(2, "0")}</p>
+                  <h2 id={`section-${section.key}`} className="mt-2 font-display uppercase text-h2">
                     {section.label}
                   </h2>
                 </div>
@@ -159,7 +159,7 @@ export function CaseStudy({ project, next }: Props) {
           >
             <span>
               <span className="font-mono text-meta text-subtle">Projet suivant</span>
-              <span className="mt-3 block font-display text-h1 transition-colors duration-(--duration-base) group-hover:text-accent">
+              <span className="mt-3 block font-display uppercase text-h1 transition-colors duration-(--duration-base) group-hover:text-accent">
                 {next.title}
               </span>
             </span>

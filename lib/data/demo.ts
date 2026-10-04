@@ -97,5 +97,15 @@ export function demoRows() {
     ...row,
   }));
 
-  return { profile, timeline, skillCategories, skills, projects, projectImages };
+  const testimonials: Tables<"testimonials">[] = seed.testimonials.map((row, index) => ({
+    author_role: "",
+    organization: "",
+    published: true,
+    position: index,
+    created_at: EPOCH,
+    updated_at: EPOCH,
+    ...row,
+  }));
+
+  return { profile, timeline, skillCategories, skills, projects, projectImages, testimonials };
 }

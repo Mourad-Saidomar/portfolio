@@ -71,7 +71,7 @@ export function ContactForm({ email }: { email: string | null }) {
         className="rounded-(--radius-lg) border border-line bg-surface p-8 outline-none md:p-10"
       >
         <CircleCheck className="size-8 text-success" aria-hidden />
-        <h2 className="mt-5 font-display text-h3">Message envoyé, merci !</h2>
+        <h2 className="mt-5 font-display uppercase text-h3">Message envoyé. Merci.</h2>
         <p className="mt-3 text-muted">Je vous réponds en général sous 48 heures, à l&apos;adresse indiquée.</p>
         <Button variant="secondary" size="sm" className="mt-8" onClick={() => setStatus("idle")}>
           Écrire un autre message

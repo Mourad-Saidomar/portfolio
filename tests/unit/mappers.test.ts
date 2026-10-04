@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const { demoRows } = await import("@/lib/data/demo");
-const { compareTimeline, toProfile, toProject, toSkillCategories, toTimelineEntry } = await import("@/lib/data/mappers");
+const { compareTimeline, toProfile, toProject, toSkillCategories, toTestimonial, toTimelineEntry } = await import(
+  "@/lib/data/mappers"
+);
 const { isRichTextEmpty, richTextToPlain, rt } = await import("@/lib/rich-text");
 
 describe("mappers", () => {
@@ -39,6 +41,12 @@ describe("mappers", () => {
     expect(project.images.map((i) => i.caption)).toEqual(["MLD.", "MPD — schéma MySQL."]);
     expect(project.cover?.url).toMatch(/move-and-go\/mcd\.webp$/);
     expect(project.context?.type).toBe("doc");
+  });
+
+  it("expose les avis du seed comme emplacements « À COMPLÉTER »", () => {
+    const items = rows.testimonials.map(toTestimonial);
+    expect(items).toHaveLength(3);
+    expect(items.every((t) => t.authorName === "À COMPLÉTER")).toBe(true);
   });
 });
 

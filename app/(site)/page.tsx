@@ -1,163 +1,235 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, FolderKanban, GraduationCap, Languages } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { type CSSProperties, Suspense } from "react";
 import { ContactCta } from "@/components/site/contact-cta";
 import { EmptyState } from "@/components/site/empty-state";
-import { Hero } from "@/components/site/hero";
-import { PointerSurface } from "@/components/site/interactive";
+import { FeaturedProject } from "@/components/site/featured-project";
+import { HERO_CARD_DELAY, Hero } from "@/components/site/hero";
+import { Facts, Philosophy, Testimonials, TimelineBrief } from "@/components/site/home-about";
 import { PersonJsonLd } from "@/components/site/json-ld";
 import { Marquee } from "@/components/site/marquee";
 import { Reveal } from "@/components/site/motion";
 import { PageTransition } from "@/components/site/page-transition";
-import { ProjectCard } from "@/components/site/project-card";
+import { ProjectTile } from "@/components/site/project-card";
+import {
+  FeaturedProjectSkeleton,
+  HeroSkeleton,
+  HomeAboutSkeleton,
+  MarqueeSkeleton,
+  ProjectTilesSkeleton,
+} from "@/components/site/skeletons";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { getProfile, getProjects, getSkillCategories, getTimeline } from "@/lib/data/public";
-import { formatPeriod } from "@/lib/format";
+import { SkeletonText } from "@/components/ui/skeleton";
+import {
+  getProfile,
+  getProjects,
+  getSkillCategories,
+  getTestimonials,
+  getTimeline,
+} from "@/lib/data/public";
+import type { ProjectSummary } from "@/lib/types";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default async function HomePage() {
-  const [profile, projects, timeline, skills] = await Promise.all([
+/** Projets mis en avant (à défaut, les premiers) ; le premier est le projet phare. */
+function selection(projects: ProjectSummary[]) {
+  return (projects.some((p) => p.featured) ? projects.filter((p) => p.featured) : projects).slice(0, 3);
+}
+
+/*
+ * Chaque bloc de données est rendu dans sa propre frontière <Suspense>, avec un squelette
+ * aux dimensions du contenu réel. Les lectures sont mises en cache (« use cache ») et
+ * dédupliquées : les squelettes ne s'affichent que si les données doivent vraiment être chargées.
+ */
+export default function HomePage() {
+  return (
+    <PageTransition>
+      <Suspense fallback={<HeroSkeleton />}>
+        <HeroSection />
+      </Suspense>
+
+      <Suspense fallback={<FeaturedProjectSkeleton />}>
+        <FeaturedSection />
+      </Suspense>
+
+      <Suspense fallback={<MarqueeSkeleton />}>
+        <SkillsMarquee />
+      </Suspense>
+
+      {/* ─── Projets ──────────────────────────────────────────── */}
+      <section id="projets" aria-labelledby="projets-title" className="container-page section-y">
+        <Suspense
+          fallback={
+            <>
+              <SectionHeading index="01" eyebrow="Projets" id="projets-title" title="Des projets concrets, de la conception au déploiement." />
+              <ProjectTilesSkeleton />
+            </>
+          }
+        >
+          <ProjectsSection />
+        </Suspense>
+      </section>
+
+      {/* ─── À propos ─────────────────────────────────────────── */}
+      <section id="a-propos" aria-labelledby="apropos-title" className="container-page section-y border-t border-line">
+        <Suspense
+          fallback={
+            <>
+              <SectionHeading
+                index="02"
+                eyebrow="À propos"
+                id="apropos-title"
+                title="Du réseau au code."
+                lead={<SkeletonText lines={3} />}
+                action={<AboutLink />}
+              />
+              <HomeAboutSkeleton />
+            </>
+          }
+        >
+          <AboutSection />
+        </Suspense>
+      </section>
+
+      <Suspense fallback={<ContactCta />}>
+        <ContactSection />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+async function HeroSection() {
+  const [profile, skills] = await Promise.all([getProfile(), getSkillCategories()]);
+  if (!profile) {
+    return (
+      <section className="container-page section-y">
+        <h1 className="font-display text-display uppercase">Mourad Saidomar</h1>
+      </section>
+    );
+  }
+  return (
+    <>
+      <PersonJsonLd profile={profile} skills={skills} />
+      <Hero profile={profile} />
+    </>
+  );
+}
+
+async function FeaturedSection() {
+  const flagship = selection(await getProjects())[0];
+  if (!flagship) return null;
+  return (
+    <div className="container-page pt-6 pb-10 lg:pb-14">
+      {/* Dernière étape de la séquence d'entrée du hero. */}
+      <div className="hero-in" style={{ "--d": `${HERO_CARD_DELAY}ms` } as CSSProperties}>
+        <FeaturedProject project={flagship} />
+      </div>
+    </div>
+  );
+}
+
+async function SkillsMarquee() {
+  const skills = await getSkillCategories();
+  return <Marquee items={skills.flatMap((c) => c.skills.map((s) => s.name)).slice(0, 24)} />;
+}
+
+async function ProjectsSection() {
+  const projects = await getProjects();
+  const chosen = selection(projects);
+  const flagshipId = chosen[0]?.id;
+
+  return (
+    <div className="data-in">
+      <SectionHeading
+        index="01"
+        eyebrow="Projets"
+        id="projets-title"
+        title="Des projets concrets, de la conception au déploiement."
+        action={
+          projects.length > chosen.length ? (
+            <Link href="/projets" className="link-underline inline-flex items-center gap-2 font-medium">
+              Tous les projets ({projects.length}) <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          ) : undefined
+        }
+      />
+      {chosen.length > 0 ? (
+        // Grille asymétrique : premier projet en grande tuile sur deux rangées, les suivants empilés à côté.
+        <ul className="mt-14 grid gap-5 md:mt-20 md:grid-cols-2 lg:grid-cols-12">
+          {chosen.map((project, i) => (
+            <Reveal
+              as="li"
+              key={project.id}
+              variant="clip"
+              delay={i * 0.1}
+              className={i === 0 && chosen.length > 1 ? "h-full md:col-span-2 lg:col-span-7 lg:row-span-2" : "h-full lg:col-span-5"}
+            >
+              <ProjectTile project={project} index={i} flagship={project.id === flagshipId} large={i === 0 && chosen.length > 1} />
+            </Reveal>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState title="Projets à venir">Les études de cas seront bientôt publiées.</EmptyState>
+      )}
+    </div>
+  );
+}
+
+function AboutLink() {
+  return (
+    <Link href="/a-propos" className="link-underline inline-flex items-center gap-2 font-medium">
+      En savoir plus <ArrowRight className="size-4" aria-hidden />
+    </Link>
+  );
+}
+
+async function AboutSection() {
+  const [profile, projects, timeline, testimonials] = await Promise.all([
     getProfile(),
     getProjects(),
     getTimeline(),
-    getSkillCategories(),
+    getTestimonials(),
   ]);
 
-  const featured = (projects.some((p) => p.featured) ? projects.filter((p) => p.featured) : projects).slice(0, 3);
-  const [lead, ...rest] = featured;
-  const skillNames = skills.flatMap((c) => c.skills.map((s) => s.name)).slice(0, 24);
-
   return (
-    <PageTransition>
-      {profile && <PersonJsonLd profile={profile} skills={skills} />}
-
-      {profile ? (
-        <Hero
-          profile={profile}
+    <div className="data-in">
+      <SectionHeading
+        index="02"
+        eyebrow="À propos"
+        id="apropos-title"
+        title="Du réseau au code."
+        lead={profile?.bio.split(/\n{2,}/)[0]}
+        action={<AboutLink />}
+      />
+      <div className="mt-14 space-y-20 md:mt-20 md:space-y-28">
+        <Facts
           facts={[
-            { label: "Projets publiés", value: projects.length },
-            { label: "Expériences", value: timeline.filter((e) => e.kind === "experience").length },
-            { label: "Langues", value: profile.languages.length },
-            { label: "Domaines", value: skills.length },
+            {
+              label: "Expériences en entreprise",
+              value: timeline.filter((e) => e.kind === "experience").length,
+              icon: BriefcaseBusiness,
+            },
+            {
+              label: "Formations et certifications",
+              value: timeline.filter((e) => e.kind === "education").length,
+              icon: GraduationCap,
+            },
+            { label: "Projets publiés", value: projects.length, icon: FolderKanban },
+            { label: "Langues parlées", value: profile?.languages.length ?? 0, icon: Languages },
           ]}
         />
-      ) : (
-        <section className="container-page section-y">
-          <h1 className="font-display text-display">Mourad Saidomar</h1>
-        </section>
-      )}
-
-      <Marquee items={skillNames} />
-
-      {/* ─── Projets choisis ─────────────────────────────────── */}
-      <section aria-labelledby="projets-title" className="container-page section-y">
-        <SectionHeading
-          index="01"
-          eyebrow="Projets choisis"
-          id="projets-title"
-          title="Des projets concrets, de la conception au déploiement."
-          action={
-            projects.length > featured.length ? (
-              <Link href="/projets" className="link-underline inline-flex items-center gap-2 font-medium">
-                Tous les projets <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            ) : undefined
-          }
-        />
-        {lead ? (
-          <div className="mt-14 grid gap-x-10 gap-y-20 md:mt-20 lg:grid-cols-12">
-            <Reveal variant="clip" className="lg:col-span-12">
-              <ProjectCard project={lead} index={0} size="large" />
-            </Reveal>
-            {rest.map((project, i) => (
-              <Reveal key={project.id} variant="clip" delay={i * 0.12} className={i % 2 === 1 ? "lg:col-span-6 lg:mt-24" : "lg:col-span-6"}>
-                <ProjectCard project={project} index={i + 1} />
-              </Reveal>
-            ))}
-          </div>
-        ) : (
-          <EmptyState title="Projets à venir">Les études de cas seront bientôt publiées.</EmptyState>
-        )}
-      </section>
-
-      {/* ─── Profil ───────────────────────────────────────────── */}
-      {profile && profile.differentiators.length > 0 && (
-        <section aria-labelledby="profil-title" className="container-page section-y border-t border-line">
-          <SectionHeading
-            index="02"
-            eyebrow="En bref"
-            id="profil-title"
-            title="Ce qui me distingue."
-            lead={profile.bio.split(/\n{2,}/)[0]}
-            action={
-              <Link href="/a-propos" className="link-underline inline-flex items-center gap-2 font-medium">
-                En savoir plus <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            }
-          />
-          <ol className="mt-14 grid gap-4 md:mt-20 md:grid-cols-3">
-            {profile.differentiators.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 0.1}>
-                <PointerSurface className="spotlight group h-full overflow-hidden rounded-(--radius-lg) border border-line bg-surface p-8 transition-[border-color,translate] duration-500 ease-(--ease-out) hover:-translate-y-1 hover:border-accent/50 md:p-10">
-                  <span className="font-display text-[4.5rem] leading-none text-coral/90 transition-colors duration-500 group-hover:text-accent">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="mt-10 font-display text-h3">{item.title}</h3>
-                  <p className="mt-3 text-muted">{item.description}</p>
-                </PointerSurface>
-              </Reveal>
-            ))}
-          </ol>
-        </section>
-      )}
-
-      {/* ─── Parcours récent ─────────────────────────────────── */}
-      {timeline.length > 0 && (
-        <section aria-labelledby="parcours-title" className="container-page section-y border-t border-line">
-          <SectionHeading
-            index="03"
-            eyebrow="Parcours"
-            id="parcours-title"
-            title="Du réseau au code."
-            action={
-              <Link href="/parcours" className="link-underline inline-flex items-center gap-2 font-medium">
-                Tout le parcours <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            }
-          />
-          <ol className="mt-14 border-t border-line md:mt-20">
-            {timeline.slice(0, 4).map((entry, i) => (
-              <Reveal as="li" key={entry.id} delay={i * 0.06}>
-                <Link
-                  href="/parcours"
-                  className="group relative isolate grid gap-2 overflow-hidden border-b border-line py-7 md:grid-cols-12 md:items-center md:gap-8"
-                >
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 -z-10 origin-bottom scale-y-0 bg-sunken transition-transform duration-500 ease-(--ease-out) group-hover:scale-y-100"
-                  />
-                  <span className="font-mono text-meta text-subtle transition-transform duration-500 ease-(--ease-out) group-hover:translate-x-3 md:col-span-3">
-                    {formatPeriod(entry)}
-                  </span>
-                  <span className="transition-transform duration-500 ease-(--ease-out) group-hover:translate-x-3 md:col-span-8">
-                    <span className="block font-display text-h3">{entry.title}</span>
-                    <span className="block text-muted">{entry.organization}</span>
-                  </span>
-                  <ArrowUpRight
-                    aria-hidden
-                    className="hidden size-6 -translate-x-3 justify-self-end opacity-0 transition-[opacity,translate] duration-500 ease-(--ease-out) group-hover:translate-x-0 group-hover:opacity-100 md:col-span-1 md:block"
-                  />
-                </Link>
-              </Reveal>
-            ))}
-          </ol>
-        </section>
-      )}
-
-      <ContactCta email={profile?.email} />
-    </PageTransition>
+        <TimelineBrief entries={timeline} />
+        {profile && <Philosophy values={profile.values} />}
+        <Testimonials items={testimonials} />
+      </div>
+    </div>
   );
+}
+
+async function ContactSection() {
+  const profile = await getProfile();
+  return <ContactCta email={profile?.email} />;
 }

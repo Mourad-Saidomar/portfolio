@@ -8,12 +8,12 @@ export const metadata: Metadata = { title: "Page introuvable" };
 export default function NotFound() {
   return (
     <main className="container-page flex min-h-dvh flex-col justify-between py-10">
-      <Link href="/" className="font-display text-[1.375rem]">
+      <Link href="/" className="font-display uppercase text-[1.375rem]">
         Mourad Saidomar
       </Link>
       <div className="py-20">
-        <p className="font-mono text-meta text-coral">Erreur 404</p>
-        <h1 className="mt-4 max-w-[16ch] font-display text-h1">Cette page n&apos;existe pas (ou plus).</h1>
+        <p className="font-mono text-meta text-accent">Erreur 404</p>
+        <h1 className="mt-4 max-w-[16ch] font-display uppercase text-h1">Cette page n&apos;existe pas (ou plus).</h1>
         <p className="mt-6 max-w-[48ch] text-lead text-muted">
           Le lien est peut-être ancien, ou le projet a été retiré. Les pages principales sont toujours là :
         </p>

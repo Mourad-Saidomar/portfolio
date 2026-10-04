@@ -45,7 +45,7 @@ export default async function AboutPage() {
             <p className="enter flex items-center gap-3 font-mono text-meta uppercase text-subtle">
               <span aria-hidden className="draw-line h-px w-8 bg-accent" style={{ "--d": "150ms" } as CSSProperties} />À propos
             </p>
-            <h1 className="mt-6 font-display text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95] tracking-[-0.025em]">
+            <h1 className="mt-6 font-display uppercase text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95]">
               <MaskWords text={`${profile.fullName},`} delay={100} />{" "}
               <span className="text-accent">
                 <MaskWords text={`${profile.headline.toLowerCase()}.`} delay={260} />
@@ -99,10 +99,10 @@ export default async function AboutPage() {
           <ol className="mt-14 grid gap-10 md:mt-20 md:grid-cols-3 md:gap-8">
             {profile.values.map((value, i) => (
               <Reveal as="li" key={value.title} delay={i * 0.1} className="group border-t border-ink pt-6">
-                <span className="font-display text-[4rem] leading-none text-coral transition-colors duration-500 group-hover:text-accent">
+                <span className="font-display uppercase text-[4rem] leading-none text-subtle transition-colors duration-500 group-hover:text-accent">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-6 font-display text-h3">{value.title}</h3>
+                <h3 className="mt-6 font-display uppercase text-h3">{value.title}</h3>
                 <p className="mt-3 text-muted">{value.description}</p>
               </Reveal>
             ))}
@@ -117,7 +117,7 @@ export default async function AboutPage() {
             {profile.differentiators.map((item, i) => (
               <Reveal as="li" key={item.title} delay={i * 0.1}>
                 <PointerSurface className="spotlight h-full overflow-hidden rounded-(--radius-lg) border border-line bg-surface p-8 transition-[border-color,translate] duration-500 ease-(--ease-out) hover:-translate-y-1 hover:border-accent/50 md:p-10">
-                  <h3 className="font-display text-h3">{item.title}</h3>
+                  <h3 className="font-display uppercase text-h3">{item.title}</h3>
                   <p className="mt-3 text-muted">{item.description}</p>
                 </PointerSurface>
               </Reveal>

@@ -70,7 +70,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormValues }) {
         <div className="grid gap-5 sm:grid-cols-2">
           {text("fullName", "Nom complet", { required: true })}
           {text("headline", "Métier affiché", { required: true, hint: "Ex. Développeur web & web mobile" })}
-          {text("tagline", "Proposition de valeur", { required: true, rows: 2, hint: "Une phrase : ce que vous apportez.", className: "sm:col-span-2" })}
+          {text("tagline", "Proposition de valeur", { required: true, rows: 2, hint: "Une phrase : ce que vous apportez. Entourez de [crochets] les mots à mettre en valeur.", className: "sm:col-span-2" })}
           {text("intro", "Sous-titre", { rows: 3, className: "sm:col-span-2" })}
           {text("availability", "Disponibilité", { hint: "Ex. Disponible pour un stage à partir de janvier 2027" })}
           {text("location", "Localisation")}

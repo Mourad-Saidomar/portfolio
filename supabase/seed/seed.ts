@@ -85,7 +85,9 @@ async function ensureAdmin(): Promise<void> {
 
 async function main(): Promise<void> {
   const rows = buildSeedRows();
-  const options = { onConflict: "id", ignoreDuplicates: !force };
+  // defaultToNull: false — une colonne absente d'une ligne prend sa valeur par défaut SQL
+  // (sinon PostgREST envoie null dès qu'une autre ligne du lot la renseigne, ex. « published »).
+  const options = { onConflict: "id", ignoreDuplicates: !force, defaultToNull: false };
 
   await uploadMedia(
     [
@@ -101,9 +103,11 @@ async function main(): Promise<void> {
   fail("compétences", (await supabase.from("skills").upsert(rows.skills, options)).error);
   fail("projets", (await supabase.from("projects").upsert(rows.projects, options)).error);
   fail("images", (await supabase.from("project_images").upsert(rows.projectImages, options)).error);
+  fail("avis", (await supabase.from("testimonials").upsert(rows.testimonials, options)).error);
   console.log(
     `✓ Contenu ${force ? "réécrit" : "inséré (lignes existantes conservées)"} : ` +
-      `${rows.projects.length} projets, ${rows.timeline.length} étapes, ${rows.skills.length} compétences`,
+      `${rows.projects.length} projets, ${rows.timeline.length} étapes, ${rows.skills.length} compétences, ` +
+      `${rows.testimonials.length} avis`,
   );
 
   await ensureAdmin();

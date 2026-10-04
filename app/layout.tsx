@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Anton, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { env } from "@/lib/env";
-import { THEME_SCRIPT } from "@/lib/theme";
+import { MOTION_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
-const display = Instrument_Serif({
-  variable: "--font-instrument",
+// Titres : grotesque condensée, une seule graisse (fichier léger).
+const display = Anton({
+  variable: "--font-anton",
   weight: "400",
-  style: "normal",
   subsets: ["latin"],
   display: "swap",
 });
@@ -43,10 +43,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f2ec" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1113" },
-  ],
+  themeColor: "#0a0c0d",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -57,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: MOTION_SCRIPT }} />
       </head>
       <body className="min-h-dvh">{children}</body>
     </html>

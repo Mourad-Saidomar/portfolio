@@ -45,7 +45,8 @@ export function ImageField({ label, path, folder, onChange, aspect = "aspect-[16
       </span>
       <div className={`relative ${aspect} w-full max-w-md overflow-hidden rounded-(--radius) border border-dashed border-field bg-sunken`}>
         {url ? (
-          <Image src={url} alt="" fill sizes="448px" className="object-cover" />
+          // Aperçu fidèle : l'image entière, comme sur le site (aucun rognage).
+          <Image src={url} alt="" fill sizes="448px" className="object-contain" />
         ) : (
           <span className="absolute inset-0 grid place-items-center text-sm text-muted">Aucune image</span>
         )}

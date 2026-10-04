@@ -118,7 +118,7 @@ function TimelineItem({ entry }: { entry: TimelineEntry }) {
           <ul className="mt-4 grid gap-x-8 gap-y-1.5 sm:grid-cols-2">
             {entry.highlights.map((item) => (
               <li key={item} className="flex gap-3 text-muted">
-                <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-coral" />
+                <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-accent/60" />
                 {item}
               </li>
             ))}

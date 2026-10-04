@@ -16,7 +16,7 @@ export async function SiteFooter() {
     <footer className="border-t border-line">
       <div className="container-page grid gap-12 py-14 md:grid-cols-12 md:py-20">
         <div className="md:col-span-6">
-          <p className="font-display text-h3">{name}</p>
+          <p className="font-display text-h3 uppercase">{name}</p>
           {profile && (
             <p className="mt-2 text-muted">
               {profile.headline}
@@ -84,7 +84,12 @@ export async function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 md:col-span-12">
-          <p className="font-mono text-meta text-subtle">© {name} — conçu et développé avec Next.js et Supabase.</p>
+          <p className="font-mono text-meta text-subtle">
+            © {name} — conçu et développé avec Next.js et Supabase ·{" "}
+            <Link href="/mentions-legales" className="link-underline hover:text-ink">
+              Mentions légales et confidentialité
+            </Link>
+          </p>
           <MotionToggle />
         </div>
       </div>
@@ -92,7 +97,7 @@ export async function SiteFooter() {
       {/* Signature : le nom en très grand, révélé à l'arrivée en bas de page. */}
       <div aria-hidden className="overflow-hidden">
         <Reveal variant="clip">
-          <p className="container-page -mb-[0.18em] font-display text-[clamp(3.5rem,1rem+14vw,16rem)] leading-[0.9] tracking-[-0.04em] whitespace-nowrap text-transparent [-webkit-text-stroke:1px_color-mix(in_oklab,var(--ink)_28%,transparent)] select-none">
+          <p className="container-page -mb-[0.12em] font-display text-[clamp(2.25rem,9.4vw,9.25rem)] leading-[0.9] whitespace-nowrap uppercase text-outline select-none">
             {name}
           </p>
         </Reveal>

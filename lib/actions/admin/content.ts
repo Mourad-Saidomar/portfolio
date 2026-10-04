@@ -11,6 +11,7 @@ import {
   reorderSchema,
   skillCategorySchema,
   skillSchema,
+  testimonialSchema,
   timelineSchema,
 } from "@/lib/validation/admin";
 import { type ActionResult, dbError, invalid, runAdminAction } from "./run";
@@ -136,6 +137,48 @@ export async function deleteSkill(idInput: unknown): Promise<ActionResult> {
   });
 }
 
+// ─── Avis ───────────────────────────────────────────────────────────
+
+export async function saveTestimonial(input: unknown): Promise<ActionResult<{ id: string }>> {
+  return runAdminAction<{ id: string }>(async ({ supabase }) => {
+    const parsed = testimonialSchema.safeParse(input);
+    if (!parsed.success) return invalid(parsed.error);
+    const t = parsed.data;
+    const row = {
+      quote: t.quote,
+      author_name: t.authorName,
+      author_role: t.authorRole,
+      organization: t.organization,
+      published: t.published,
+    };
+
+    let result;
+    if (t.id) {
+      result = await supabase.from("testimonials").update(row).eq("id", t.id).select("id").single();
+    } else {
+      // Nouvel avis : ajouté en fin de liste.
+      const { count } = await supabase.from("testimonials").select("id", { count: "exact", head: true });
+      result = await supabase
+        .from("testimonials")
+        .insert({ ...row, position: count ?? 0 })
+        .select("id")
+        .single();
+    }
+    if (result.error) return dbError("avis", result.error);
+    updateTag(TAGS.testimonials);
+    return { ok: true, data: { id: result.data.id }, message: "Avis enregistré." };
+  });
+}
+
+export async function deleteTestimonial(idInput: unknown): Promise<ActionResult> {
+  return runAdminAction(async ({ supabase }) => {
+    const { error } = await supabase.from("testimonials").delete().eq("id", z.uuid().parse(idInput));
+    if (error) return dbError("avis", error);
+    updateTag(TAGS.testimonials);
+    return { ok: true, message: "Avis supprimé." };
+  });
+}
+
 // ─── Réordonnancement (glisser-déposer) ─────────────────────────────
 
 const REORDER_TAGS = {
@@ -144,6 +187,7 @@ const REORDER_TAGS = {
   skill_categories: TAGS.skills,
   skills: TAGS.skills,
   timeline_entries: TAGS.timeline,
+  testimonials: TAGS.testimonials,
 } as const;
 
 export async function reorder(input: unknown): Promise<ActionResult> {

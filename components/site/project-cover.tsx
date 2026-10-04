@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import type { ProjectSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { FittedImage } from "./fitted-image";
 
 type Props = {
   project: Pick<ProjectSummary, "title" | "cover" | "stack">;
@@ -12,33 +12,28 @@ type Props = {
   eager?: boolean;
   /** Pastille « Voir » qui suit le curseur (cartes cliquables uniquement). */
   cursor?: boolean;
+  /** Sans arrondi propre (couverture intégrée au bord d'une carte). */
+  flat?: boolean;
   className?: string;
 };
 
 /**
- * Couverture 16:10 avec parallaxe au défilement (CSS, sans JS) et léger zoom au survol.
+ * Couverture 16:10 : l'image importée est affichée en entier (jamais rognée) sur un fond flouté
+ * qui porte la parallaxe au défilement (CSS, sans JS) et le léger zoom au survol.
  * Sans image, une composition typographique prend le relais : jamais de cadre vide.
  */
-export function ProjectCover({ project, sizes, eager, wide, cursor, className }: Props) {
+export function ProjectCover({ project, sizes, eager, wide, cursor, flat, className }: Props) {
   return (
     <div
       className={cn(
-        "relative aspect-[16/10] overflow-hidden rounded-(--radius-lg) bg-sunken",
+        "relative aspect-[16/10] overflow-hidden bg-sunken",
+        !flat && "rounded-(--radius-lg)",
         wide && "lg:aspect-[21/9]",
         className,
       )}
     >
       {project.cover ? (
-        <div className="parallax-img absolute inset-0">
-          <Image
-            src={project.cover.url}
-            alt={project.cover.alt}
-            fill
-            sizes={sizes}
-            loading={eager ? "eager" : "lazy"}
-            className="object-cover transition-[scale] duration-[1.1s] ease-(--ease-out) group-hover:scale-[1.05]"
-          />
-        </div>
+        <FittedImage image={project.cover} sizes={sizes} eager={eager} backdropClassName="parallax-img" />
       ) : (
         <div
           aria-hidden

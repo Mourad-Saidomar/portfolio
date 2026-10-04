@@ -1,7 +1,8 @@
-// Captures « écran par écran » avec animations : node scripts/viewport-shots.mjs <dossier> <chemin> [light|dark] [largeur]
+// Captures « écran par écran » avec animations : node scripts/viewport-shots.mjs <dossier> <chemin> [largeur]
 import { chromium } from "@playwright/test";
 
-const [out = "shots", path = "/", scheme = "light", width = "1440"] = process.argv.slice(2);
+const [out = "shots", path = "/", width = "1440"] = process.argv.slice(2);
+const scheme = "dark"; // thème unique
 const base = process.env.BASE_URL ?? "http://localhost:3100";
 const w = Number(width);
 const h = w < 600 ? 844 : 900;

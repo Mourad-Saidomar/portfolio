@@ -149,6 +149,19 @@ export type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export const cvSchema = z.object({ path: storagePath.regex(/\.pdf$/i, "Le CV doit être un PDF.") });
 
+// ─── Avis ───────────────────────────────────────────────────────────
+
+export const testimonialSchema = z.object({
+  id: z.uuid().optional(),
+  quote: required("La citation", 600),
+  authorName: required("Le nom", 120),
+  authorRole: text(120),
+  organization: text(120),
+  published: z.boolean(),
+});
+
+export type TestimonialFormValues = z.infer<typeof testimonialSchema>;
+
 // ─── Messages ───────────────────────────────────────────────────────
 
 export const messageStatusSchema = z.object({
@@ -157,7 +170,7 @@ export const messageStatusSchema = z.object({
 });
 
 export const reorderSchema = z.object({
-  table: z.enum(["projects", "skill_categories", "skills", "timeline_entries", "project_images"]),
+  table: z.enum(["projects", "skill_categories", "skills", "timeline_entries", "project_images", "testimonials"]),
   ids: z.array(z.uuid()).min(1).max(500),
 });
 

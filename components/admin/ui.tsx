@@ -32,7 +32,7 @@ export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "succ
         tone === "neutral" && "bg-sunken text-muted",
         tone === "success" && "bg-success/12 text-success",
         tone === "accent" && "bg-accent-soft text-accent",
-        tone === "warning" && "bg-coral/12 text-ink",
+        tone === "warning" && "bg-warning/12 text-ink",
       )}
     >
       {children}

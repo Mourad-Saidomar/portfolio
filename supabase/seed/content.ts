@@ -19,7 +19,7 @@ export const profile: TablesInsert<"profile"> = {
   id: 1,
   full_name: "Mourad Saidomar",
   headline: "Développeur web & web mobile",
-  tagline: "Je conçois des interfaces web claires, rapides et accessibles — de la maquette à la base de données.",
+  tagline: "Je conçois des [interfaces web] claires, [rapides] et accessibles — de la maquette à la base de données.",
   intro:
     "Développeur web & web mobile en formation à Mayotte, avec un socle solide en systèmes et réseaux. Je recherche un stage pour construire des produits utiles au sein d'une équipe exigeante.",
   bio: [
@@ -32,8 +32,9 @@ export const profile: TablesInsert<"profile"> = {
   email: "mourad.saidomar.sio@gmail.com",
   phone: "06 39 71 25 73",
   show_phone: false,
-  photo_path: "profile/portrait.webp",
-  photo_alt: "Portrait de Mourad Saidomar, souriant, en polo sombre sur fond clair",
+  // Portrait détouré (fond transparent) en costume, éclairage contrasté : posé en bas du hero.
+  photo_path: "profile/portrait-hero.webp",
+  photo_alt: "Portrait de Mourad Saidomar en costume sombre, chemise blanche et cravate noire",
   cv_path: null,
   github_url: "https://github.com/mourad-saidomar",
   linkedin_url: null,
@@ -429,3 +430,16 @@ export const projects: SeedProject[] = [
     images: [],
   },
 ];
+
+// ─── Avis ────────────────────────────────────────────────────────────
+// Aucun avis dans le CV ni sur l'ancien site : emplacements à remplacer depuis l'admin (Avis).
+
+export const testimonials: (TablesInsert<"testimonials"> & { id: string })[] = [1, 2, 3].map((n) => ({
+  id: id(4, n),
+  quote: `${TODO} — avis d'un ancien collègue, tuteur de stage ou formateur.`,
+  author_name: TODO,
+  author_role: TODO,
+  organization: "",
+  published: true,
+  position: n - 1,
+}));

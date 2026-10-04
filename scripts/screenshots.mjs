@@ -5,8 +5,8 @@ const out = process.argv[2] ?? "screenshots";
 const paths = process.argv.slice(3).length ? process.argv.slice(3) : ["/"];
 const base = process.env.BASE_URL ?? "http://localhost:3100";
 const variants = [
-  { name: "desktop-light", viewport: { width: 1440, height: 900 }, scheme: "light" },
-  { name: "mobile-dark", viewport: { width: 390, height: 844 }, scheme: "dark" },
+  { name: "desktop", viewport: { width: 1440, height: 900 }, scheme: "dark" },
+  { name: "mobile", viewport: { width: 390, height: 844 }, scheme: "dark" },
 ];
 
 const browser = await chromium.launch();

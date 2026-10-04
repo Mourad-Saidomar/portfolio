@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { stripHighlights } from "@/lib/highlight";
 import type { Profile, SkillCategory } from "@/lib/types";
 
 /** Données structurées schema.org/Person (SEO). */
@@ -8,7 +9,7 @@ export function PersonJsonLd({ profile, skills = [] }: { profile: Profile; skill
     "@type": "Person",
     name: profile.fullName,
     jobTitle: profile.headline,
-    description: profile.tagline,
+    description: stripHighlights(profile.tagline),
     url: env.siteUrl,
     email: `mailto:${profile.email}`,
     image: profile.photo ? new URL(profile.photo.url, env.siteUrl).toString() : undefined,

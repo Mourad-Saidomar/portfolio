@@ -11,13 +11,14 @@ export function Marquee({ items }: { items: string[] }) {
 
   const row = (
     <ul className="flex shrink-0 items-center">
-      {items.map((item) => (
+      {items.map((item, i) => (
         <li
           key={item}
-          className="flex items-center gap-8 pr-8 font-display text-[clamp(2rem,1.2rem+3vw,3.75rem)] leading-none whitespace-nowrap"
+          className="flex items-center gap-8 pr-8 font-display text-[clamp(2rem,1.2rem+3vw,3.75rem)] leading-none whitespace-nowrap uppercase"
         >
-          {item}
-          <span className="text-[0.45em] text-coral">✦</span>
+          {/* Un mot sur deux au contour seul : rythme typographique (trait ≥ 3:1 de contraste). */}
+          <span className={i % 2 === 1 ? "text-outline [--outline:60%]" : undefined}>{item}</span>
+          <span className="text-[0.45em] text-accent">✦</span>
         </li>
       ))}
     </ul>

@@ -7,6 +7,7 @@ import type {
   ProjectSummary,
   RichText,
   SkillCategory,
+  Testimonial,
   TimelineEntry,
   TitledText,
 } from "@/lib/types";
@@ -74,6 +75,16 @@ export function compareTimeline(a: TimelineEntry & { position?: number }, b: Tim
   const bStart = b.startDate ?? "9999";
   if (aStart !== bStart) return aStart < bStart ? 1 : -1;
   return (a.position ?? 0) - (b.position ?? 0);
+}
+
+export function toTestimonial(row: Tables<"testimonials">): Testimonial {
+  return {
+    id: row.id,
+    quote: row.quote,
+    authorName: row.author_name,
+    authorRole: row.author_role,
+    organization: row.organization,
+  };
 }
 
 export function toSkillCategories(

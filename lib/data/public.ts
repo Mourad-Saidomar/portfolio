@@ -2,7 +2,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { isDemoMode, isSupabaseConfigured } from "@/lib/env";
 import { createPublicClient } from "@/lib/supabase/public";
-import type { Profile, Project, ProjectSummary, SkillCategory, TimelineEntry } from "@/lib/types";
+import type { Profile, Project, ProjectSummary, SkillCategory, Testimonial, TimelineEntry } from "@/lib/types";
 import { demoRows } from "./demo";
 import {
   compareTimeline,
@@ -10,6 +10,7 @@ import {
   toProject,
   toProjectSummary,
   toSkillCategories,
+  toTestimonial,
   toTimelineEntry,
 } from "./mappers";
 import { TAGS } from "./tags";
@@ -131,6 +132,25 @@ export async function getProject(slug: string): Promise<Project | null> {
   if (!data) return null;
   const { project_images: images, ...row } = data;
   return toProject(row, images ?? []);
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag(TAGS.testimonials);
+
+  const from = source();
+  let rows = from === "demo" ? demoRows().testimonials.filter((t) => t.published) : [];
+  if (from === "supabase") {
+    const { data, error } = await createPublicClient()
+      .from("testimonials")
+      .select("*")
+      .eq("published", true)
+      .order("position");
+    report("avis", error);
+    rows = data ?? [];
+  }
+  return [...rows].sort((a, b) => a.position - b.position).map(toTestimonial);
 }
 
 /** Projets voisins (navigation « projet suivant » en bas d'étude de cas). */

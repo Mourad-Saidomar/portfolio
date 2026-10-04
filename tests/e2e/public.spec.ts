@@ -8,6 +8,7 @@ const PAGES = [
   { path: "/competences", heading: /boîte à outils/ },
   { path: "/a-propos", heading: /Mourad Saidomar/ },
   { path: "/contact", heading: /Parlons/ },
+  { path: "/mentions-legales", heading: /Mentions légales/ },
 ];
 
 /** Attend la fin des animations d'entrée (hors boucles et animations pilotées par le défilement). */
@@ -58,7 +59,8 @@ test.describe("parcours visiteur", () => {
   test("de l'accueil à une étude de cas, puis au projet suivant", async ({ page }) => {
     await page.goto("/");
     const firstCard = page.locator("#projets-title").locator("xpath=ancestor::section").getByRole("article").first();
-    const title = await firstCard.getByRole("heading").innerText();
+    // textContent : les titres sont mis en capitales par CSS, innerText renverrait « COVOIT'MAY ».
+    const title = (await firstCard.getByRole("heading").textContent()) ?? "";
     await firstCard.getByRole("link").click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
     await expect(page.getByRole("heading", { name: "Contexte" })).toBeVisible();
@@ -85,15 +87,61 @@ test.describe("parcours visiteur", () => {
     await expect(page.getByText(/Expérience$/)).toHaveCount(0);
   });
 
-  test("le thème choisi est conservé", async ({ page, isMobile }) => {
+  // Le hero est plein écran (choix de design) : le projet phare le suit immédiatement.
+  test("le projet phare suit directement le hero", async ({ page }) => {
     await page.goto("/");
-    if (isMobile) await page.getByRole("button", { name: "Ouvrir le menu" }).click();
-    const toggle = page.getByRole("button", { name: /^Thème/ }).first();
-    await toggle.click(); // système → clair
-    await toggle.click(); // clair → sombre
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.reload();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await settleAnimations(page);
+    const stage = await page.locator("#hero-title").locator("xpath=..").boundingBox();
+    const flagship = page.getByRole("article", { name: "Covoit'May" });
+    const card = await flagship.boundingBox();
+    expect(card!.y - (stage!.y + stage!.height)).toBeLessThanOrEqual(48);
+    await flagship.getByRole("link").click();
+    await expect(page).toHaveURL(/\/projets\/covoit-may$/);
+  });
+
+  test("accueil : projets choisis, repères, philosophie et avis", async ({ page }) => {
+    await page.goto("/");
+    const projects = page.locator("#projets");
+    await expect(projects.getByRole("article")).toHaveCount(3);
+    const about = page.locator("#a-propos");
+    await expect(about.getByText("Expériences en entreprise")).toBeVisible();
+    await expect(about.getByRole("heading", { name: "Ma façon de travailler" })).toBeVisible();
+    await expect(about.getByRole("heading", { name: "Ils ont travaillé avec moi" })).toBeVisible();
+    await expect(about.getByRole("figure")).toHaveCount(3);
+  });
+
+  test("hero : le portrait reste dans la scène, sans recouvrir la carte du projet phare", async ({ page }) => {
+    await page.goto("/");
+    await settleAnimations(page);
+    const stage = await page.locator("#hero-title").locator("xpath=..").boundingBox();
+    const card = await page.getByRole("article", { name: "Covoit'May" }).boundingBox();
+    const clip = await page
+      .locator("#hero-title")
+      .locator("xpath=..")
+      .evaluate((el) => getComputedStyle(el).overflow);
+    expect(clip).toBe("hidden");
+    expect(stage && card && card.y).toBeGreaterThanOrEqual(stage!.y + stage!.height);
+  });
+
+  test("navbar : fondue dans le hero en haut, style normal après 50 px", async ({ page }) => {
+    await page.goto("/");
+    const header = page.getByRole("banner");
+    const styles = () =>
+      header.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { bg: cs.backgroundColor, border: cs.borderBottomColor };
+      });
+    const top = await styles();
+    expect(top.border).toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+    await page.mouse.wheel(0, 300);
+    await expect(page.locator("html")).toHaveAttribute("data-scrolled", "");
+    await expect.poll(async () => (await styles()).border).not.toBe(top.border);
+  });
+
+  test("thème sombre unique", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("button", { name: /^Thème/ })).toHaveCount(0);
+    await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute("content", "dark");
   });
 
   test("menu mobile accessible", async ({ page, isMobile }) => {
@@ -135,16 +183,25 @@ test.describe("animations", () => {
     );
   });
 
-  test("mouvement réduit : aucune animation, contenu visible d'emblée", async ({ browser }) => {
+  test("mouvement réduit : fondus seuls, rien ne bouge ni ne boucle", async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: "reduce" });
     const page = await context.newPage();
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    const running = await page.evaluate(
-      () => document.getAnimations().filter((a) => a.playState === "running").length,
+    const report = await page.evaluate(() =>
+      document.getAnimations().map((a) => {
+        const effect = a.effect as KeyframeEffect | null;
+        const props = (effect?.getKeyframes() ?? []).flatMap((k) =>
+          Object.keys(k).filter((p) => !["offset", "computedOffset", "easing", "composite"].includes(p)),
+        );
+        return { props, infinite: effect?.getComputedTiming().iterations === Infinity };
+      }),
     );
-    expect(running).toBe(0);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // L'entrée du hero existe (séquence de fondus), mais sans déplacement, zoom ni flou.
+    expect(report.length).toBeGreaterThan(0);
+    expect(report.flatMap((r) => r.props).filter((p) => p !== "opacity")).toEqual([]);
+    expect(report.filter((r) => r.infinite)).toEqual([]);
+    await settleAnimations(page);
+    await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
     await context.close();
   });
 });

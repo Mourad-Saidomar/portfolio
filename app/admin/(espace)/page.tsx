@@ -79,7 +79,7 @@ export default async function DashboardPage() {
               {todos.map((todo) => (
                 <li key={todo.label + todo.href}>
                   <Link href={todo.href} className="flex min-h-11 items-center gap-3 py-2 hover:text-accent">
-                    <CircleAlert className="size-4 shrink-0 text-coral" aria-hidden />
+                    <CircleAlert className="size-4 shrink-0 text-warning" aria-hidden />
                     <span className="flex-1">{todo.label}</span>
                     <ArrowRight className="size-4 text-subtle" aria-hidden />
                   </Link>

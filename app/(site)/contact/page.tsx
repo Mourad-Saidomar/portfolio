@@ -59,7 +59,7 @@ export default async function ContactPage() {
               <span aria-hidden className="h-px w-8 bg-line" />
               Contact
             </p>
-            <h1 className="mt-6 font-display text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95] tracking-[-0.025em]">
+            <h1 className="mt-6 font-display uppercase text-[clamp(2.75rem,1.4rem+5.4vw,6.25rem)] leading-[0.95]">
               <MaskWords text="Parlons de votre projet." delay={100} />
             </h1>
             <p className="mt-6 max-w-[44ch] text-lead text-muted">
@@ -101,7 +101,7 @@ export default async function ContactPage() {
 
           <div className="lg:col-span-6 lg:col-start-7">
             <div className="rounded-(--radius-lg) border border-line bg-surface p-6 sm:p-8 md:p-10">
-              <h2 className="font-display text-h3">Envoyer un message</h2>
+              <h2 className="font-display uppercase text-h3">Envoyer un message</h2>
               <div className="mt-6">
                 <ContactForm email={profile?.email ?? null} />
               </div>

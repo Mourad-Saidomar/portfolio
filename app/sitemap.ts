@@ -4,7 +4,7 @@ import { env } from "@/lib/env";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await getProjects();
-  const pages = ["", "/projets", "/parcours", "/competences", "/a-propos", "/contact"];
+  const pages = ["", "/projets", "/parcours", "/competences", "/a-propos", "/contact", "/mentions-legales"];
 
   return [
     ...pages.map((path) => ({

@@ -27,14 +27,14 @@ Ce fichier est la version lisible ; la version machine utilisée par le seed est
 | GitHub | https://github.com/mourad-saidomar — **À COMPLÉTER : vérifier** (déduit du domaine GitHub Pages) | ancien site |
 | LinkedIn | **À COMPLÉTER** | — |
 | Instagram | https://www.instagram.com/mourad.saidomar/ (non mis en avant : peu pertinent pour un recruteur) | ancien site |
-| Photo | `supabase/seed-assets/photo.png` (portrait fond blanc, 447×559) | ancien site |
+| Photo | `public/demo/media/profile/portrait.webp` (portrait fond blanc, 447×559) ; portrait du hero utilisé par le seed : `portrait-hero.webp` (costume, détouré, fond transparent) | ancien site |
 | CV PDF | **À COMPLÉTER : téléverser le CV actuel depuis l'admin** (le PDF de l'ancien site date du BTS et n'est pas repris) | — |
 
 > Note sur le titre : le brief propose « ingénieur logiciel / développeur web ». Le CV correspond à une formation DWWM en cours ; le titre retenu est **« Développeur web & web mobile »**, plus juste pour un recruteur. Modifiable dans l'admin (Profil → Métier).
 
 ## 2. Accroche et proposition de valeur
 
-- **Proposition de valeur (hero)** : « Je conçois des interfaces web claires, rapides et accessibles — de la maquette à la base de données. »
+- **Proposition de valeur (hero)** : « Je conçois des interfaces web claires, rapides et accessibles — de la maquette à la base de données. » Dans l'admin, les mots entre crochets s'affichent en pastille : `Je conçois des [interfaces web] claires, [rapides] et accessibles…`.
 - **Sous-titre** : « Développeur web & web mobile en formation à Mayotte, avec un socle solide en systèmes et réseaux. Je recherche un stage pour construire des produits utiles au sein d'une équipe exigeante. »
 - **Disponibilité stage** : **À COMPLÉTER** (dates et durée de la période de stage).
 
@@ -138,3 +138,23 @@ Scénario Hôtel (MCD, Access), exercices JavaScript (chronomètre, classes `Use
 ## 7. Contact
 - Formulaire (nom, e-mail, message) → table `messages`, consultable dans l'admin.
 - Liens : e-mail, GitHub, LinkedIn (**À COMPLÉTER**), téléchargement du CV.
+
+## 8. Avis d'anciens collègues
+
+Aucun avis dans le CV ni sur l'ancien site : **rien n'est inventé**. Le seed crée trois emplacements, affichés en pointillés sur l'accueil jusqu'à leur remplacement (admin → **Avis**).
+
+| # | Citation | Nom | Rôle | Structure |
+|---|---|---|---|---|
+| 1 | **À COMPLÉTER** | **À COMPLÉTER** | **À COMPLÉTER** | — |
+| 2 | **À COMPLÉTER** | **À COMPLÉTER** | **À COMPLÉTER** | — |
+| 3 | **À COMPLÉTER** | **À COMPLÉTER** | **À COMPLÉTER** | — |
+
+Pistes : tuteurs de stage (DGFiP de Mayotte, mairie de Mamoudzou), formateurs AloAlo Mayotte Compétence, coéquipiers de projet. Demander leur accord avant publication.
+
+## 9. Mentions légales et confidentialité
+
+Page `/mentions-legales` (lien dans le pied de page), rédigée d'après le fonctionnement réel du site. À compléter dans `app/(site)/mentions-legales/page.tsx` :
+
+- **Adresse de l'hébergeur** (Vercel Inc.) : **À COMPLÉTER** au déploiement.
+- **Région d'hébergement Supabase** (Project Settings → General) : **À COMPLÉTER**.
+- **Durée de conservation des messages de contact** : **À COMPLÉTER** (ex. 12 mois, puis suppression depuis l'admin).

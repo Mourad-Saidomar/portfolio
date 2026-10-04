@@ -1,10 +1,10 @@
 # Portfolio — Mourad Saidomar
 
-Portfolio professionnel avec espace d'administration : projets (études de cas), parcours, compétences, profil, CV et messages se mettent à jour **sans toucher au code ni redéployer**.
+Portfolio professionnel avec espace d'administration : projets (études de cas), parcours, compétences, avis, profil, CV et messages se mettent à jour **sans toucher au code ni redéployer**.
 
-- **Site public** : accueil, à propos, parcours filtrable, compétences, projets + études de cas, contact.
+- **Site public** (direction « Éditorial nuit », thème sombre unique — voir [DESIGN.md](DESIGN.md) §0) : accueil avec projet phare visible sans défiler, à propos, parcours filtrable, compétences, projets + études de cas, contact.
 - **Admin** (`/admin`) : un seul administrateur, écritures protégées côté serveur et par la base (RLS).
-- **Qualité** : Lighthouse desktop 100/100/100/100, mobile 94–96 en performance et 100 ailleurs ; 0 violation axe (WCAG 2.2 AA) ; 60 tests unitaires + 17 tests SQL + 42 tests de bout en bout.
+- **Qualité** : 0 violation axe (WCAG 2.2 AA) sur les pages publiques ; 72 tests Vitest (unitaires + SQL) et tests de bout en bout Playwright. Lighthouse : desktop 100/100/100/100, mobile 94–96 en performance — **mesures de la v2, à refaire après la refonte v3**.
 
 | Documents | |
 |---|---|
@@ -64,9 +64,12 @@ En mode démo, le site est en lecture seule : l'admin est désactivé et le form
 
 ### 2.2 Créer les tables, la sécurité et le stockage
 
-La migration [`supabase/migrations/20260930000000_init.sql`](supabase/migrations/20260930000000_init.sql) crée les tables, index, politiques RLS, buckets `media` / `documents` et leurs politiques.
+Deux migrations, **à appliquer dans l'ordre** :
 
-**Option A — éditeur SQL (le plus simple)** : Supabase → *SQL Editor* → collez le contenu du fichier → *Run*.
+1. [`20260930000000_init.sql`](supabase/migrations/20260930000000_init.sql) : tables, index, politiques RLS, buckets `media` / `documents` et leurs politiques ;
+2. [`20261002000000_testimonials.sql`](supabase/migrations/20261002000000_testimonials.sql) : table des avis (`testimonials`), ses politiques RLS, et ajout de la table à la fonction de réordonnancement. **Si votre base existe déjà, seule celle-ci est à exécuter.**
+
+**Option A — éditeur SQL (le plus simple)** : Supabase → *SQL Editor* → collez le contenu de chaque fichier → *Run*.
 
 **Option B — CLI** :
 
@@ -173,6 +176,13 @@ Les pages publiques sont statiques et servies depuis le CDN. Chaque enregistreme
 7. **Publier** : le projet est en ligne immédiatement. Pour changer l'ordre sur le site : liste des projets → glisser-déposer (souris, doigt ou clavier : Espace, flèches, Espace).
 
 Mettre à jour le CV : **Profil & CV → Remplacer le CV**. Le lien public `/cv` pointe toujours vers la dernière version (pratique sur un CV papier ou LinkedIn).
+
+Autres réglages de l'accueil :
+
+- **Projet phare** : c'est le premier projet mis en avant (étoile) dans l'ordre de **Projets**.
+- **Mots en pastille** de l'accroche : dans **Profil → Proposition de valeur**, entourez-les de crochets (`des [interfaces web] claires`).
+- **Avis** : **Avis → Nouvel avis**, ou modifiez les trois emplacements « À COMPLÉTER » créés par le seed (glisser-déposer pour l'ordre).
+- **Photo** : une photo détourée (fond transparent, PNG ou WebP) s'intègre au fond sombre ; celle du site est `public/demo/media/profile/portrait-hero.webp`.
 
 ---
 

@@ -1,138 +1,141 @@
-import { ArrowRight, Download } from "lucide-react";
+import { Mail } from "lucide-react";
 import Image from "next/image";
-import { type CSSProperties, Fragment } from "react";
-import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
+import type { CSSProperties } from "react";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import type { Profile } from "@/lib/types";
-import { CountUp, Magnetic } from "./interactive";
-import { RotatingBadge } from "./rotating-badge";
+import { Typewriter } from "./typewriter";
 
-type Fact = { label: string; value: number };
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
+/** Mots de l'effet machine à écrire (« Je suis … »), tirés du CV. */
+const ROLES = [
+  "développeur web",
+  "développeur web mobile",
+  "en formation DWWM",
+  "admin systèmes & réseaux",
+  "passionné de code",
+  "rigoureux et curieux",
+  "basé à Mayotte",
+  "en recherche de stage",
+];
+
+const WORD = "Portfolio";
+
 /**
- * Hero de l'accueil. Chorégraphie d'entrée en CSS pur (aucune attente du JavaScript) :
- * lieu → nom (lignes masquées) → métier → accroche → actions → portrait (rideau).
- * Le paragraphe d'introduction, souvent l'élément LCP, glisse sans fondu : il est peint immédiatement.
+ * Séquence d'entrée (≈ 1 s, CSS pur) : titre → portrait → ligne de frappe → icônes → carte projet.
+ * La carte est rendue hors du hero (chargement séparé) : elle reprend HERO_CARD_DELAY.
+ * La frappe démarre à la fin de la séquence.
  */
-export function Hero({ profile, facts }: { profile: Profile; facts: Fact[] }) {
-  const nameLines = profile.fullName.split(/\s+/).filter(Boolean);
-  const region = profile.location.split(",").pop()?.trim() || profile.location;
+export const HERO_CARD_DELAY = 650;
+const SEQ = { letterStep: 30, portrait: 200, typing: 450, icons: 550, typingStart: 1000 } as const;
+
+const iconLink =
+  "inline-flex size-10 items-center justify-center rounded-full bg-ink/10 text-ink transition-colors duration-(--duration-fast) hover:bg-accent hover:text-on-accent";
+
+/**
+ * Hero de l'accueil, composé comme une affiche de film (plein écran, plans empilés) :
+ *  z-0  le mot PORTFOLIO, étiré verticalement et lumineux (décoratif) ;
+ *  z-10 le portrait détouré, ancré en bas et contenu dans la scène (overflow hidden) ;
+ *  z-20 un fondu vers le fond, pour la lisibilité du premier plan ;
+ *  z-30 le premier plan : effet machine à écrire en style titre, icônes de contact.
+ * Le h1 (nom + métier) est réservé aux lecteurs d'écran et aux moteurs de recherche.
+ * Défilement (CSS piloté par le scroll, transform/opacity uniquement) : le titre va moins vite
+ * que le portrait, qui monte en rétrécissant ; tout s'estompe vers la carte du projet phare.
+ * Mouvement réduit : entrée en fondus seuls, pas de parallaxe ; la frappe reste (rien ne bouge).
+ */
+export function Hero({ profile }: { profile: Profile }) {
+  const { github, linkedin } = profile.socials;
 
   return (
-    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden">
-      {/* Décor : grille pointillée + halos lagon/corail qui dérivent lentement. */}
-      <div aria-hidden className="dot-grid absolute inset-0 -z-10" />
-      <div aria-hidden className="glow glow-accent ambient -z-10 -top-[25%] -right-[20%] size-[90vw] lg:size-[60vw]" />
-      <div aria-hidden className="glow glow-coral ambient -z-10 top-[45%] -left-[25%] size-[80vw] lg:size-[45vw]" />
+    <section aria-labelledby="hero-title" className="relative">
+      <div className="relative isolate h-[calc(100svh-var(--header-h))] min-h-[36rem] max-h-[68rem] overflow-hidden bg-(--hero-bg)">
+        {/* Projecteur : halo clair au-dessus de la tête, comme un éclairage de studio. */}
+        <div
+          aria-hidden
+          style={delay(0)}
+          className="hero-glow-in absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_50%_30%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%),radial-gradient(30%_35%_at_50%_22%,color-mix(in_oklab,var(--ink)_8%,transparent),transparent_70%)]"
+        />
 
-      <div className="container-page pt-10 pb-16 sm:pt-14 md:pb-24 lg:pt-20">
-        <div className="enter flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-meta text-subtle" style={delay(0)}>
-          {profile.availability && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3 py-1 text-ink backdrop-blur">
-              <span className="relative flex size-2" aria-hidden>
-                <span className="ambient absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60 motion-reduce:animate-none" />
-                <span className="relative inline-flex size-2 rounded-full bg-success" />
-              </span>
-              {profile.availability}
-            </span>
-          )}
-          {profile.location && <span>{profile.location}</span>}
+        <h1 id="hero-title" className="sr-only">
+          {profile.fullName} — {profile.headline}
+        </h1>
+
+        {/* z-0 : le mot PORTFOLIO, étiré verticalement comme une affiche. */}
+        <div aria-hidden className="absolute inset-x-0 top-[42%] z-0 -translate-y-1/2 select-none">
+          <div className="hero-word-scroll">
+            <p className="hero-name hero-backdrop text-center font-display text-[min(21vw,38vh)] leading-[0.8] uppercase">
+              {[...WORD].map((letter, i) => (
+                <span key={i} className="letter-in" style={delay(i * SEQ.letterStep)}>
+                  {letter}
+                </span>
+              ))}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-8 grid gap-12 lg:mt-10 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-8">
-            {/* Texte écrit une seule fois (lecteurs d'écran, moteurs de recherche) ; espaces réelles entre les lignes. */}
-            <h1 id="hero-title">
-              <span className="block font-display text-[clamp(4.25rem,0.5rem+17vw,11.5rem)] leading-[0.86] tracking-[-0.035em]">
-                {nameLines.map((line, i) => (
-                  <Fragment key={line}>
-                    <span className={i % 2 === 1 ? "block lg:pl-[14%]" : "block"}>
-                      <span className="mask-line">
-                        <span style={delay(120 + i * 110)}>{line}</span>
-                      </span>
-                    </span>
-                    {i < nameLines.length - 1 && " "}
-                  </Fragment>
-                ))}
-              </span>
-              <span className="sr-only">, </span>
-              <span className="mt-7 flex items-center gap-4">
-                <span aria-hidden className="draw-line h-px w-12 shrink-0 bg-accent sm:w-20" style={delay(420)} />
-                <span className="enter text-h3 text-accent" style={delay(460)}>
-                  {profile.headline}
-                </span>
-              </span>
-            </h1>
-
-            {profile.tagline && (
-              <p className="enter mt-10 max-w-[30ch] font-display text-h2 text-ink" style={delay(560)}>
-                {profile.tagline}
-              </p>
-            )}
-            {profile.intro && (
-              <p className="enter-soft mt-6 max-w-[58ch] text-lead text-muted" style={delay(620)}>
-                {profile.intro}
-              </p>
-            )}
-
-            <div className="enter mt-10 flex flex-wrap items-center gap-3" style={delay(720)}>
-              <Magnetic>
-                <ButtonLink href="/projets" icon={<ArrowRight className="size-4" />}>
-                  Voir les projets
-                </ButtonLink>
-              </Magnetic>
-              <Magnetic>
-                <ButtonLink href="/contact" variant="secondary">
-                  Me contacter
-                </ButtonLink>
-              </Magnetic>
-              {profile.cvUrl && (
-                <ButtonAnchor href="/cv" variant="ghost" icon={<Download className="size-4" />} iconPosition="start">
-                  CV (PDF)
-                </ButtonAnchor>
-              )}
-            </div>
-          </div>
-
-          {profile.photo && (
-            <figure className="relative mx-auto w-full max-w-sm self-end lg:col-span-4 lg:max-w-none">
-              <div className="curtain relative aspect-[4/5] overflow-hidden rounded-(--radius-lg) bg-sunken" style={delay(300)}>
+        {/* z-10 : le portrait, ancré en bas ; ce qui dépasse sous la scène est coupé (overflow hidden). */}
+        {profile.photo && (
+          <div className="pointer-events-none absolute -bottom-[14%] left-1/2 z-10 h-[114%] w-[170vw] -translate-x-1/2 [mask-image:linear-gradient(to_right,transparent,black_16%,black_84%,transparent)] sm:w-full sm:max-w-[72rem]">
+            {/* Couches séparées : défilement (extérieure) et entrée (intérieure) n'utilisent pas le même transform. */}
+            <div className="hero-photo-scroll relative size-full">
+              <div className="hero-photo-in relative size-full" style={delay(SEQ.portrait)}>
                 <Image
                   src={profile.photo.url}
                   alt={profile.photo.alt}
                   fill
-                  loading="eager"
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 384px, 100vw"
-                  className="object-cover object-top"
+                  priority
+                  sizes="(min-width: 768px) 72rem, 170vw"
+                  className="object-contain object-bottom"
                 />
-                <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent" />
-                <div aria-hidden className="absolute inset-x-4 bottom-4 flex justify-between font-mono text-meta text-white/90">
-                  <span>{profile.fullName}</span>
-                  <span>{region}</span>
-                </div>
               </div>
-              <div className="enter absolute -top-12 -left-8 z-10 hidden sm:block lg:-left-14" style={delay(900)}>
-                <RotatingBadge text={`${profile.headline} ✦ ${region}`} className="size-32 lg:size-36" />
-              </div>
-            </figure>
-          )}
-        </div>
-
-        {facts.length > 0 && (
-          <dl className="mt-20 grid grid-cols-2 border-t border-line md:mt-28 md:grid-cols-4">
-            {facts.map((fact, i) => (
-              <div
-                key={fact.label}
-                className="border-b border-line py-6 pr-4 md:border-b-0 md:border-l md:pl-6 md:first:border-l-0 md:first:pl-0"
-              >
-                <dt className="font-mono text-meta text-subtle">{fact.label}</dt>
-                <dd className="mt-2 font-display text-[clamp(2.75rem,2rem+3vw,4.5rem)] leading-none">
-                  <CountUp value={fact.value} duration={1200 + i * 150} />
-                </dd>
-              </div>
-            ))}
-          </dl>
+            </div>
+          </div>
         )}
+
+        {/* z-20 : fondu du buste vers le fond (lisibilité de la ligne de frappe). */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[48%] bg-gradient-to-t from-(--hero-bg) from-10% via-(--hero-bg)/60 via-45% to-transparent"
+        />
+
+        {/* z-30 : premier plan, en bas. */}
+        <div className="hero-fg-scroll absolute inset-x-0 bottom-0 z-30">
+          <div className="container-page flex flex-col items-center gap-5 pb-6 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:pb-10">
+            <ul className="hero-in order-2 flex gap-2 sm:order-none" style={delay(SEQ.icons)}>
+              {github && (
+                <li>
+                  <a href={github} target="_blank" rel="me noopener noreferrer" className={iconLink}>
+                    <GithubIcon className="size-[1.125rem]" />
+                    <span className="sr-only">GitHub (nouvel onglet)</span>
+                  </a>
+                </li>
+              )}
+              {linkedin && (
+                <li>
+                  <a href={linkedin} target="_blank" rel="me noopener noreferrer" className={iconLink}>
+                    <LinkedinIcon className="size-[1.125rem]" />
+                    <span className="sr-only">LinkedIn (nouvel onglet)</span>
+                  </a>
+                </li>
+              )}
+              <li>
+                <a href={`mailto:${profile.email}`} className={iconLink}>
+                  <Mail className="size-[1.125rem]" aria-hidden />
+                  <span className="sr-only">Envoyer un e-mail</span>
+                </a>
+              </li>
+            </ul>
+
+            <div className="hero-in" style={delay(SEQ.typing)}>
+              <Typewriter
+                prefix="Je suis"
+                words={ROLES}
+                startDelay={SEQ.typingStart}
+                className="hero-name text-center font-display text-[clamp(1.5rem,0.9rem+2.6vw,3.25rem)] leading-none uppercase"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

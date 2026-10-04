@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { rt } from "@/lib/rich-text";
-import { projectSchema, profileSchema, timelineSchema } from "@/lib/validation/admin";
+import { projectSchema, profileSchema, reorderSchema, testimonialSchema, timelineSchema } from "@/lib/validation/admin";
 import { contactSchema } from "@/lib/validation/contact";
 
 const validProject = {
@@ -136,5 +136,32 @@ describe("profileSchema", () => {
     });
     const paths = result.error?.issues.map((i) => i.path[0]);
     expect(paths).toEqual(expect.arrayContaining(["fullName", "headline", "tagline", "email"]));
+  });
+});
+
+describe("testimonialSchema", () => {
+  const item = {
+    quote: "Rigoureux et curieux.",
+    authorName: "Prénom Nom",
+    authorRole: "Tuteur de stage",
+    organization: "",
+    published: true,
+  };
+
+  it("accepte un avis valide, sans structure", () => {
+    expect(testimonialSchema.safeParse(item).success).toBe(true);
+  });
+
+  it("exige la citation et le nom", () => {
+    const result = testimonialSchema.safeParse({ ...item, quote: "  ", authorName: "" });
+    expect(result.error?.issues.map((i) => i.path[0])).toEqual(["quote", "authorName"]);
+  });
+
+  it("borne la longueur de la citation", () => {
+    expect(testimonialSchema.safeParse({ ...item, quote: "x".repeat(601) }).success).toBe(false);
+  });
+
+  it("autorise le réordonnancement des avis", () => {
+    expect(reorderSchema.safeParse({ table: "testimonials", ids: [crypto.randomUUID()] }).success).toBe(true);
   });
 });

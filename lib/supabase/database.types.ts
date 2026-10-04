@@ -238,6 +238,28 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["messages"]["Insert"]>;
         Relationships: [];
       };
+      testimonials: {
+        Row: {
+          id: string;
+          quote: string;
+          author_name: string;
+          author_role: string;
+          organization: string;
+          published: boolean;
+          position: number;
+        } & Timestamps;
+        Insert: {
+          id?: string;
+          quote: string;
+          author_name: string;
+          author_role?: string;
+          organization?: string;
+          published?: boolean;
+          position?: number;
+        } & Partial<Timestamps>;
+        Update: Partial<Database["public"]["Tables"]["testimonials"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {

@@ -26,5 +26,7 @@ export default defineConfig({
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
+        // Mode démo à l'exécution : le formulaire de contact n'écrit jamais dans la vraie base.
+        env: { DEMO_MODE: "1" },
       },
 });

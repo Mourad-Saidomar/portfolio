@@ -8,7 +8,6 @@ import { createPortal } from "react-dom";
 import { buttonClasses } from "@/components/ui/button";
 import { NAV_LINKS, isActive } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "./theme-toggle";
 
 const MOBILE_LINKS = [...NAV_LINKS, { href: "/contact", label: "Contact" }] as const;
 
@@ -53,18 +52,18 @@ export function SiteNav() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "group relative inline-flex min-h-11 items-center px-3 text-[0.9375rem] transition-colors duration-(--duration-fast)",
+                    "group inline-flex min-h-11 items-center gap-2 px-3 font-mono text-[0.75rem] tracking-[0.08em] uppercase transition-colors duration-(--duration-fast)",
                     active ? "text-ink" : "text-muted hover:text-ink",
                   )}
                 >
-                  {link.label}
                   <span
                     aria-hidden
                     className={cn(
-                      "absolute inset-x-3 bottom-2 h-px origin-left bg-current transition-transform duration-(--duration-base) ease-(--ease-out)",
-                      active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
+                      "size-1.5 rounded-full transition-[background-color,scale] duration-(--duration-base) ease-(--ease-out)",
+                      active ? "bg-accent" : "scale-50 bg-line group-hover:scale-100 group-hover:bg-muted",
                     )}
                   />
+                  {link.label}
                 </Link>
               </li>
             );
@@ -73,9 +72,6 @@ export function SiteNav() {
       </nav>
 
       <div className="flex items-center gap-1">
-        <span className="hidden md:inline-flex">
-          <ThemeToggle />
-        </span>
         <Link
           href="/contact"
           aria-current={isActive(pathname, "/contact") ? "page" : undefined}
@@ -114,7 +110,7 @@ export function SiteNav() {
                     <Link
                       href={link.href}
                       aria-current={isActive(pathname, link.href) ? "page" : undefined}
-                      className="flex items-baseline justify-between py-4 font-display text-[2.25rem] leading-tight aria-[current=page]:text-accent"
+                      className="flex items-baseline justify-between py-4 font-display text-[2.5rem] leading-tight uppercase aria-[current=page]:text-accent"
                     >
                       {link.label}
                       <span className="font-mono text-meta text-subtle">
@@ -124,10 +120,6 @@ export function SiteNav() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 flex items-center justify-between rounded-full border border-line bg-surface py-1 pr-1 pl-5">
-                <span className="text-muted">Thème</span>
-                <ThemeToggle />
-              </div>
             </nav>
           </div>,
           document.body,

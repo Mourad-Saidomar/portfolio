@@ -48,6 +48,14 @@ export type TimelineEntry = {
   highlights: string[];
 };
 
+export type Testimonial = {
+  id: string;
+  quote: string;
+  authorName: string;
+  authorRole: string;
+  organization: string;
+};
+
 export type Skill = { id: string; name: string };
 export type SkillCategory = { id: string; name: string; description: string; skills: Skill[] };
 

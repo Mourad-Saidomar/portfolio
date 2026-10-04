@@ -50,6 +50,16 @@ export async function listSkillCategories(supabase: Client) {
   }));
 }
 
+export async function listTestimonials(supabase: Client) {
+  const { data } = await supabase.from("testimonials").select("*").order("position");
+  return data ?? [];
+}
+
+export async function getTestimonial(supabase: Client, id: string) {
+  const { data } = await supabase.from("testimonials").select("*").eq("id", id).maybeSingle();
+  return data;
+}
+
 export async function getProfileRow(supabase: Client) {
   const { data } = await supabase.from("profile").select("*").eq("id", 1).maybeSingle();
   return data;
@@ -76,10 +86,11 @@ export type TodoItem = { label: string; href: string };
 
 /** Repère les contenus marqués « À COMPLÉTER » et les manques importants (CV, LinkedIn…). */
 export async function findTodos(supabase: Client): Promise<TodoItem[]> {
-  const [profile, timeline, projects] = await Promise.all([
+  const [profile, timeline, projects, testimonials] = await Promise.all([
     getProfileRow(supabase),
     listTimeline(supabase),
     supabase.from("projects").select("id, title, summary, context, problem, role, solution, results, demo_url, repo_url"),
+    listTestimonials(supabase),
   ]);
   const todos: TodoItem[] = [];
 
@@ -107,5 +118,11 @@ export async function findTodos(supabase: Client): Promise<TodoItem[]> {
       todos.push({ label: `Projet : ${project.title}`, href: `/admin/projets/${project.id}` });
     }
   }
+
+  testimonials.forEach((item, index) => {
+    if ([item.quote, item.author_name, item.author_role].some(isTodo)) {
+      todos.push({ label: `Avis n° ${index + 1} : remplacer l'emplacement`, href: `/admin/avis/${item.id}` });
+    }
+  });
   return todos;
 }

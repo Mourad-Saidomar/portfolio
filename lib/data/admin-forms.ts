@@ -1,6 +1,11 @@
 import type { Tables } from "@/lib/supabase/database.types";
 import type { Language, RichText, TitledText } from "@/lib/types";
-import type { ProfileFormValues, ProjectFormValues, TimelineFormValues } from "@/lib/validation/admin";
+import type {
+  ProfileFormValues,
+  ProjectFormValues,
+  TestimonialFormValues,
+  TimelineFormValues,
+} from "@/lib/validation/admin";
 
 /** Conversions ligne SQL → valeurs de formulaire admin. */
 
@@ -72,6 +77,17 @@ export function timelineToForm(entry: Tables<"timeline_entries"> | null): Timeli
     description: entry?.description ?? "",
     highlights: entry?.highlights ?? [],
     published: entry?.published ?? true,
+  };
+}
+
+export function testimonialToForm(row: Tables<"testimonials"> | null): TestimonialFormValues {
+  return {
+    id: row?.id,
+    quote: row?.quote ?? "",
+    authorName: row?.author_name ?? "",
+    authorRole: row?.author_role ?? "",
+    organization: row?.organization ?? "",
+    published: row?.published ?? true,
   };
 }
 

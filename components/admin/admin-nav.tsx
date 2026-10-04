@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Layers,
   LogOut,
+  MessageSquareQuote,
   Route,
   UserRound,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const LINKS = [
   { href: "/admin/projets", label: "Projets", icon: FolderKanban },
   { href: "/admin/parcours", label: "Parcours", icon: Route },
   { href: "/admin/competences", label: "Compétences", icon: Layers },
+  { href: "/admin/avis", label: "Avis", icon: MessageSquareQuote },
   { href: "/admin/profil", label: "Profil & CV", icon: UserRound },
   { href: "/admin/messages", label: "Messages", icon: Inbox },
 ];
