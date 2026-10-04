@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const LOGIN_PATH = "/admin/connexion";
+/** Pages admin accessibles sans session : connexion, mot de passe oublié, lien de l'e-mail. */
+const PUBLIC_PATHS = new Set([LOGIN_PATH, "/admin/mot-de-passe-oublie", "/admin/auth/confirm"]);
 
 /**
  * Protège /admin : rafraîchit la session Supabase (cookies) et redirige les visiteurs
@@ -27,9 +29,9 @@ export async function proxy(request: NextRequest) {
   });
 
   const { data } = await supabase.auth.getClaims();
-  const isLoginPage = request.nextUrl.pathname === LOGIN_PATH;
+  const isPublic = PUBLIC_PATHS.has(request.nextUrl.pathname);
 
-  if (!data?.claims && !isLoginPage) {
+  if (!data?.claims && !isPublic) {
     const target = request.nextUrl.clone();
     target.pathname = LOGIN_PATH;
     target.search = "";

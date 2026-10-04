@@ -1,6 +1,7 @@
 "use client";
 
 import { LoaderCircle, LogIn } from "lucide-react";
+import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
@@ -55,6 +56,9 @@ export function LoginForm({ next, notice }: { next: string; notice: string | nul
       >
         {pending ? "Connexion…" : "Se connecter"}
       </Button>
+      <Link href="/admin/mot-de-passe-oublie" className="link-underline w-fit text-sm text-muted hover:text-ink">
+        Mot de passe oublié ?
+      </Link>
     </form>
   );
 }

@@ -45,3 +45,11 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# outils locaux (agents, spec-kit), fichiers parasites
+/.claude/
+/.specify/
+/claude/
+/1
+# workflow CI de démarrage (non configuré)
+/.github/
