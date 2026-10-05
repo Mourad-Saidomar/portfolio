@@ -7,12 +7,13 @@ import { PageTransition } from "@/components/site/page-transition";
 import { SkillsSkeleton } from "@/components/site/skeletons";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile, getSkillCategories } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Compétences",
   description: "Compétences front-end, back-end, outils et savoir-être, regroupées par domaine.",
-  alternates: { canonical: "/competences" },
-};
+  path: "/competences",
+});
 
 /** Le titre s'affiche tout de suite ; les compétences attendent leurs données derrière un squelette. */
 export default function SkillsPage() {

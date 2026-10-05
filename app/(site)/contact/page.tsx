@@ -5,12 +5,13 @@ import { MaskWords } from "@/components/site/mask-words";
 import { PageTransition } from "@/components/site/page-transition";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { getProfile } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description: "Contacter Mourad Saidomar : formulaire, e-mail, LinkedIn, GitHub et CV à télécharger.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const profile = await getProfile();

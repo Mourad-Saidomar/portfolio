@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { env } from "@/lib/env";
+import { OPEN_GRAPH_BASE, SITE_NAME } from "@/lib/seo";
 import { MOTION_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
@@ -37,9 +38,11 @@ export const metadata: Metadata = {
   },
   description:
     "Portfolio de Mourad Saidomar, développeur web & web mobile à Mayotte : projets, parcours, compétences et contact.",
-  applicationName: "Mourad Saidomar",
-  authors: [{ name: "Mourad Saidomar" }],
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
   formatDetection: { telephone: false },
+  openGraph: OPEN_GRAPH_BASE,
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

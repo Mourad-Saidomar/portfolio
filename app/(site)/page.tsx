@@ -28,11 +28,10 @@ import {
   getTestimonials,
   getTimeline,
 } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 import type { ProjectSummary } from "@/lib/types";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-};
+export const metadata: Metadata = pageMetadata({ path: "/" });
 
 /** Projets mis en avant (à défaut, les premiers) ; le premier est le projet phare. */
 function selection(projects: ProjectSummary[]) {

@@ -12,12 +12,13 @@ import { PageTransition } from "@/components/site/page-transition";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile, getSkillCategories } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "À propos",
   description: "Présentation, valeurs et ce qui distingue Mourad Saidomar, développeur web & web mobile à Mayotte.",
-  alternates: { canonical: "/a-propos" },
-};
+  path: "/a-propos",
+});
 
 export default async function AboutPage() {
   const [profile, skills] = await Promise.all([getProfile(), getSkillCategories()]);

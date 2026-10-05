@@ -7,12 +7,13 @@ import { TimelineSkeleton } from "@/components/site/skeletons";
 import { Timeline } from "@/components/site/timeline";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile, getTimeline } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Parcours",
   description: "Expériences professionnelles et formations : DWWM, BTS SIO SISR, stages à la DGFiP et à la mairie de Mamoudzou.",
-  alternates: { canonical: "/parcours" },
-};
+  path: "/parcours",
+});
 
 /** Le titre s'affiche tout de suite ; le parcours attend ses données derrière un squelette. */
 export default function TimelinePage() {

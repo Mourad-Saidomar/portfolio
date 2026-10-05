@@ -8,12 +8,13 @@ import { ProjectCard } from "@/components/site/project-card";
 import { ProjectCardsSkeleton } from "@/components/site/skeletons";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile, getProjects } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projets",
   description: "Études de cas : contexte, problème, rôle, solution, stack et résultats de chaque projet.",
-  alternates: { canonical: "/projets" },
-};
+  path: "/projets",
+});
 
 /** Le titre s'affiche tout de suite ; la liste attend ses données derrière un squelette. */
 export default function ProjectsPage() {

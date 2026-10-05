@@ -4,6 +4,7 @@ import { CaseStudy } from "@/components/site/case-study";
 import { ContactCta } from "@/components/site/contact-cta";
 import { PageTransition } from "@/components/site/page-transition";
 import { getAdjacentProjects, getProfile, getProject, getProjects } from "@/lib/data/public";
+import { OPEN_GRAPH_BASE } from "@/lib/seo";
 
 /** Slug factice : Cache Components exige au moins un paramètre au build, même sans projet publié. */
 const PLACEHOLDER = "aucun-projet";
@@ -21,7 +22,13 @@ export async function generateMetadata({ params }: PageProps<"/projets/[slug]">)
     title: project.title,
     description: project.summary,
     alternates: { canonical: `/projets/${project.slug}` },
-    openGraph: { type: "article", title: project.title, description: project.summary },
+    openGraph: {
+      ...OPEN_GRAPH_BASE,
+      type: "article",
+      url: `/projets/${project.slug}`,
+      title: project.title,
+      description: project.summary,
+    },
   };
 }
 

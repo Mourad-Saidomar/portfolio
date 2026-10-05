@@ -4,12 +4,13 @@ import type { ReactNode } from "react";
 import { PageTransition } from "@/components/site/page-transition";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getProfile } from "@/lib/data/public";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Mentions légales et confidentialité",
   description: "Éditeur, hébergement et traitement des données personnelles du portfolio de Mourad Saidomar.",
-  alternates: { canonical: "/mentions-legales" },
-};
+  path: "/mentions-legales",
+});
 
 /* Rédigé à partir du fonctionnement réel du site (formulaire de contact, stockage local, admin). */
 

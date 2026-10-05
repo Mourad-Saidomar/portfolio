@@ -12,5 +12,6 @@ export default async function OpenGraphImage() {
     title: profile?.fullName ?? "Mourad Saidomar",
     subtitle: profile?.headline ?? "Développeur web & web mobile",
     footer: profile?.email ?? "",
+    portrait: true,
   });
 }
